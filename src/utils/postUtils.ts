@@ -1,3 +1,5 @@
+const RELATIVE_TIME_MAX_DAYS = 7;
+
 const normalizeDate = (input: number | string | Date): Date => {
     if (!input) return new Date();
 
@@ -23,19 +25,42 @@ const normalizeDate = (input: number | string | Date): Date => {
     return new Date(input as string);
 };
 
-export const getRelativeTime = (timestamp: number | string | Date): string => {
+const isRelativeDateText = (value: string): boolean => {
+    return value.includes('lalu') || value === 'Baru saja';
+};
+
+export const formatDateOnly = (timestamp: number | string | Date): string => {
     if (!timestamp) return '';
 
     if (typeof timestamp === 'string') {
-        if (timestamp.includes('lalu') || timestamp === 'Baru saja') {
-            return timestamp;
-        }
+        if (isRelativeDateText(timestamp)) return timestamp;
+        if (timestamp.includes(',')) return timestamp.split(',')[0].trim();
+    }
+
+    const date = normalizeDate(timestamp);
+
+    if (isNaN(date.getTime())) return '';
+
+    return date
+        .toLocaleDateString('id-ID', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+        })
+        .replace('.', '');
+};
+
+export const getRelativeTime = (timestamp: number | string | Date): string => {
+    if (!timestamp) return '';
+
+    if (typeof timestamp === 'string' && isRelativeDateText(timestamp)) {
+        return timestamp;
     }
 
     const now = new Date();
     const past = normalizeDate(timestamp);
 
-    if (isNaN(past.getTime())) return '';
+    if (isNaN(past.getTime())) return typeof timestamp === 'string' ? timestamp : '';
 
     const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 
@@ -43,10 +68,15 @@ export const getRelativeTime = (timestamp: number | string | Date): string => {
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
 
+    if (days > RELATIVE_TIME_MAX_DAYS) return formatDateOnly(past);
     if (days > 0) return `${days} hari lalu`;
     if (hours > 0) return `${hours} jam lalu`;
     if (minutes > 0) return `${minutes} menit lalu`;
     return 'Baru saja';
+};
+
+export const getCardDate = (timestamp: number | string | Date): string => {
+    return getRelativeTime(timestamp);
 };
 
 export const formatDate = (timestamp: number | string | Date): string => {
@@ -58,15 +88,9 @@ export const formatDate = (timestamp: number | string | Date): string => {
 
     const date = normalizeDate(timestamp);
 
-    if (isNaN(date.getTime())) return '';
+    if (isNaN(date.getTime())) return typeof timestamp === 'string' ? timestamp : '';
 
-    const formattedDate = date
-        .toLocaleDateString('id-ID', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-        })
-        .replace('.', '');
+    const formattedDate = formatDateOnly(date);
     const formattedTime = date
         .toLocaleTimeString('id-ID', {
             hour: '2-digit',

@@ -5,8 +5,8 @@ import defaultProfilePicture from '../../../public/profilepicture.svg';
 import thumbnail from '../../../public/thumbnail.svg';
 import { Post } from '../../types/post.ts';
 import MainPostSkeleton from '../ui/MainPostSkeleton.tsx';
-import DOMPurify from 'isomorphic-dompurify';
 import { truncateText } from '../../utils/postUtils.ts';
+import { sanitizeHtmlContent } from '../../utils/sanitizeHtml.ts';
 import SafeImage from '../ui/SafeImage.tsx';
 import SafeHtmlContent from '../ui/SafeHtmlContent.tsx';
 import DisqusSkeleton from '../ui/DisqusSkeleton.tsx';
@@ -167,7 +167,7 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
         },
     ];
 
-    const sanitizedContent = DOMPurify.sanitize(mainPost?.content || '');
+    const sanitizedContent = sanitizeHtmlContent(mainPost?.content || '');
 
     return (
         <>

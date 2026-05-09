@@ -71,7 +71,7 @@ async function handleRequest(req, res, url, renderFunction, protocol) {
     const template = await fs.readFile(templatePath, 'utf-8');
     const htmlTemplate = isProd ? template : await vite.transformIndexHtml(url, template);
 
-    let html = htmlTemplate.replace('<!--ssr-head-outlet-->', '');
+    let html = htmlTemplate;
 
     let defaultHead = '';
     try {
@@ -86,7 +86,7 @@ async function handleRequest(req, res, url, renderFunction, protocol) {
         console.error(e);
     }
 
-    html = html.replace('', defaultHead);
+    html = html.replace('<!--ssr-head-outlet-->', defaultHead).replace('<!--ssr-outlet-->', '');
 
     if (GOOGLE_VERIFICATION_CODE) {
         html = html.replace('%VITE_GOOGLE_VERIFICATION_CODE%', GOOGLE_VERIFICATION_CODE);
@@ -102,96 +102,101 @@ async function handleRequest(req, res, url, renderFunction, protocol) {
     res.end(html);
 }
 
-async function createSsrServer() {
-    const app = createServer(async (req, res) => {
-        try {
-            const url = req.url;
-            const protocol = req.headers['x-forwarded-proto'] || 'http';
-            const urlObj = new URL(url, `${protocol}://${req.headers.host}`);
-            const pathname = urlObj.pathname;
+export async function handler(req, res) {
+    try {
+        const url = req.url || '/';
+        const protocol = req.headers['x-forwarded-proto'] || 'http';
+        const urlObj = new URL(url, `${protocol}://${req.headers.host}`);
+        const pathname = urlObj.pathname;
 
-            if (pathname === '/robots.txt') {
-                if (!CHRONONEWSAPI_URI) {
-                    console.error(
-                        'VITE_CHRONONEWSAPI_URI (CHRONONEWSAPI_URI) is not defined for robots.txt'
-                    );
-                    const basicRobotsTxt = `User-agent: *\nDisallow: /`;
-                    res.statusCode = 200;
-                    res.setHeader('Content-Type', 'text/plain');
-                    res.end(basicRobotsTxt);
-                    return;
-                }
+        if (pathname === '/robots.txt') {
+            if (!CHRONONEWSAPI_URI) {
+                console.error(
+                    'VITE_CHRONONEWSAPI_URI (CHRONONEWSAPI_URI) is not defined for robots.txt'
+                );
+                const basicRobotsTxt = `User-agent: *\nDisallow: /`;
+                res.statusCode = 200;
+                res.setHeader('Content-Type', 'text/plain');
+                res.end(basicRobotsTxt);
+                return;
+            }
 
-                const robotsTxtContent = `
+            const robotsTxtContent = `
 User-agent: *
 Allow: /
 
 Sitemap: ${CHRONONEWSAPI_URI}/sitemap.xml
 `;
 
+            res.statusCode = 200;
+            res.setHeader('Content-Type', 'text/plain');
+            res.end(robotsTxtContent.trim());
+            return;
+        }
+
+        if (!isProd) {
+            if (!vite) {
+                vite = await import('vite').then((i) =>
+                    i.createServer({
+                        server: { middlewareMode: true },
+                        appType: 'custom',
+                        root: resolve('./'),
+                    })
+                );
+            }
+
+            await new Promise((resolveMiddleware) => vite.middlewares(req, res, resolveMiddleware));
+            if (res.headersSent) return;
+
+            const { render } = await vite.ssrLoadModule('/src/entry-server.tsx');
+            await handleRequest(req, res, url, render, protocol);
+            return;
+        }
+
+        const filePath = resolve(
+            'dist/client' + new URL(url, `http://${req.headers.host}`).pathname
+        );
+        try {
+            const stat = await fs.stat(filePath);
+            if (stat.isFile()) {
+                const content = await fs.readFile(filePath);
+                const ext = path.extname(filePath);
+                let contentType = 'application/octet-stream';
+                if (ext === '.js') contentType = 'application/javascript';
+                else if (ext === '.css') contentType = 'text/css';
+                else if (ext === '.svg') contentType = 'image/svg+xml';
+                else if (ext === '.html') contentType = 'text/html';
+                res.setHeader('Content-Type', contentType);
                 res.statusCode = 200;
-                res.setHeader('Content-Type', 'text/plain');
-                res.end(robotsTxtContent.trim());
+                res.end(content);
                 return;
             }
-
-            if (!isProd) {
-                if (!vite) {
-                    vite = await import('vite').then((i) =>
-                        i.createServer({
-                            server: { middlewareMode: true },
-                            appType: 'custom',
-                            root: resolve('./'),
-                        })
-                    );
-                }
-
-                await new Promise((resolveMiddleware) =>
-                    vite.middlewares(req, res, resolveMiddleware)
-                );
-                if (res.headersSent) return;
-
-                const { render } = await vite.ssrLoadModule('/src/entry-server.tsx');
-                await handleRequest(req, res, url, render, protocol);
-            } else {
-                const filePath = resolve(
-                    'dist/client' + new URL(url, `http://${req.headers.host}`).pathname
-                );
-                try {
-                    const stat = await fs.stat(filePath);
-                    if (stat.isFile()) {
-                        const content = await fs.readFile(filePath);
-                        const ext = path.extname(filePath);
-                        let contentType = 'application/octet-stream';
-                        if (ext === '.js') contentType = 'application/javascript';
-                        else if (ext === '.css') contentType = 'text/css';
-                        else if (ext === '.svg') contentType = 'image/svg+xml';
-                        else if (ext === '.html') contentType = 'text/html';
-                        res.setHeader('Content-Type', contentType);
-                        res.statusCode = 200;
-                        res.end(content);
-                        return;
-                    }
-                } catch (e) {
-                    if (e.code !== 'ENOENT') {
-                        throw e;
-                    }
-                }
-
-                const { render } = await import('./dist/server/entry-server.js');
-                await handleRequest(req, res, url, render, protocol);
-            }
         } catch (e) {
-            if (!isProd && vite) vite.ssrFixStacktrace(e);
-            console.error(e);
-            res.statusCode = 500;
-            res.end(e.stack);
+            if (e.code !== 'ENOENT') {
+                throw e;
+            }
         }
-    });
+
+        const { render } = await import('./dist/server/entry-server.js');
+        await handleRequest(req, res, url, render, protocol);
+    } catch (e) {
+        if (!isProd && vite) vite.ssrFixStacktrace(e);
+        console.error(e);
+        res.statusCode = 500;
+        res.end(e.stack);
+    }
+}
+
+function createSsrServer() {
+    const app = createServer(handler);
 
     app.listen(PORT, () => {
         console.log(`Server listening on http://localhost:${PORT}`);
     });
 }
 
-createSsrServer();
+const isMainModule = process.argv[1] && path.resolve(process.argv[1]) === __filename;
+
+if (isMainModule) {
+    createSsrServer();
+}

@@ -7,7 +7,7 @@ import {
     truncateText,
     slugify,
     getDateRangeInUnix,
-    getRelativeTime,
+    getCardDate,
     formatDate,
 } from '../utils/postUtils.ts';
 import { Menu } from 'primereact/menu';
@@ -174,7 +174,7 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
     const headlinePost: Post | null = useMemo(() => {
         const data = headlineResult?.data;
         return Array.isArray(data) && data.length > 0
-            ? { ...data[0], createdAt: getRelativeTime(data[0].createdAt) }
+            ? { ...data[0], createdAt: getCardDate(data[0].createdAt) }
             : null;
     }, [headlineResult]);
 
@@ -208,7 +208,7 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
     const topPosts: Post[] = useMemo(() => {
         const data = topPostsResult?.data;
         return Array.isArray(data)
-            ? data.map((p) => ({ ...p, createdAt: getRelativeTime(p.createdAt) }))
+            ? data.map((p) => ({ ...p, createdAt: getCardDate(p.createdAt) }))
             : [];
     }, [topPostsResult]);
 
@@ -247,7 +247,7 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
         }
         const data = dataSource?.data;
         return Array.isArray(data)
-            ? data.map((p) => ({ ...p, createdAt: getRelativeTime(p.createdAt) }))
+            ? data.map((p) => ({ ...p, createdAt: getCardDate(p.createdAt) }))
             : [];
     }, [regularPostsResult, regularPostsQuery.data, isPostPage, postId, manualData?.post?.id]);
 
@@ -276,7 +276,7 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
     const searchPosts: Post[] = useMemo(() => {
         const data = searchResult?.data;
         return Array.isArray(data)
-            ? data.map((p) => ({ ...p, createdAt: getRelativeTime(p.createdAt) }))
+            ? data.map((p) => ({ ...p, createdAt: getCardDate(p.createdAt) }))
             : [];
     }, [searchResult]);
 

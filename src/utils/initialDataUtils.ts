@@ -1,6 +1,6 @@
 import { PostService } from '../services/postService.ts';
 import { CategoryService } from '../services/categoryService.ts';
-import { formatDate, getRelativeTime, slugify, getDateRangeInUnix } from './postUtils.ts';
+import { formatDate, getCardDate, slugify, getDateRangeInUnix } from './postUtils.ts';
 import { Post } from '../types/post.ts';
 import { InitialDataStructure } from '../types/initialData.ts';
 
@@ -14,7 +14,7 @@ interface ApiError {
 export default async function initialDataUtils(pathname: string, searchParams: URLSearchParams) {
     const utils = {
         formatDate,
-        getRelativeTime,
+        getCardDate,
         slugify,
         getDateRangeInUnix,
     };
@@ -85,7 +85,7 @@ export default async function initialDataUtils(pathname: string, searchParams: U
                     data: headlineRes.data
                         ? headlineRes.data.map((p: Post) => ({
                               ...p,
-                              createdAt: utils.getRelativeTime(p.createdAt),
+                              createdAt: utils.getCardDate(p.createdAt),
                           }))
                         : [],
                     pagination: headlineRes.pagination,
@@ -114,7 +114,7 @@ export default async function initialDataUtils(pathname: string, searchParams: U
                     data: topRes.data
                         ? topRes.data.map((p: Post) => ({
                               ...p,
-                              createdAt: utils.getRelativeTime(p.createdAt),
+                              createdAt: utils.getCardDate(p.createdAt),
                           }))
                         : [],
                     pagination: topRes.pagination,
@@ -137,7 +137,7 @@ export default async function initialDataUtils(pathname: string, searchParams: U
                     data: searchRes.data
                         ? searchRes.data.map((p: Post) => ({
                               ...p,
-                              createdAt: utils.getRelativeTime(p.createdAt),
+                              createdAt: utils.getCardDate(p.createdAt),
                           }))
                         : [],
                     pagination: searchRes.pagination,
@@ -171,7 +171,7 @@ export default async function initialDataUtils(pathname: string, searchParams: U
                 data: regularRes.data
                     ? regularRes.data.map((p: Post) => ({
                           ...p,
-                          createdAt: utils.getRelativeTime(p.createdAt),
+                          createdAt: utils.getCardDate(p.createdAt),
                       }))
                     : [],
                 pagination: regularRes.pagination,
