@@ -1,7 +1,7 @@
 import { Dialog } from 'primereact/dialog';
 import { Button } from 'primereact/button';
 import defaultProfilePicture from '../../../public/profilepicture.svg';
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import React, { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import InputGroup from '../ui/InputGroup.tsx';
 import SubmitButton from '../ui/SubmitButton.tsx';
 import { useSidebar } from '../../hooks/useSidebar.ts';
@@ -9,6 +9,7 @@ import { Menu } from 'primereact/menu';
 import { MenuItem } from 'primereact/menuitem';
 import { ProfileFormData, UserManagementFormData } from '../../types/user.ts';
 import PhoneNumberInput from '../ui/PhoneNumberInput.tsx';
+import { Skeleton } from 'primereact/skeleton';
 
 interface UserModalProps<T extends ProfileFormData | UserManagementFormData> {
     visible: boolean;
@@ -60,6 +61,24 @@ const UserModal = <T extends ProfileFormData | UserManagementFormData>({
     } = useSidebar();
 
     const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+    const [profilePictureStatus, setProfilePictureStatus] = useState<
+        'loading' | 'loaded' | 'error'
+    >('loading');
+
+    const profilePictureSource = useMemo(() => {
+        if (croppedImage) return croppedImage;
+        if (typeof data?.profilePicture === 'string' && data.profilePicture.trim() !== '') {
+            return `${data.profilePicture}`;
+        }
+        return defaultProfilePicture;
+    }, [croppedImage, data?.profilePicture]);
+
+    useEffect(() => {
+        setProfilePictureStatus('loading');
+    }, [profilePictureSource]);
+
+    const showProfilePictureSkeleton = profilePictureStatus === 'loading';
+    const showProfilePictureError = profilePictureStatus === 'error';
 
     useEffect(() => {
         const items: MenuItem[] = [];
@@ -124,19 +143,41 @@ const UserModal = <T extends ProfileFormData | UserManagementFormData>({
         >
             <form onSubmit={handleSubmit} className="w-full">
                 <div className="flex flex-col p-4 gap-4">
-                    <div className="relative w-fit mx-auto flex justify-center items-center">
-                        <img
-                            src={
-                                croppedImage ||
-                                (typeof data?.profilePicture === 'string' &&
-                                data.profilePicture.trim() !== ''
-                                    ? `${data?.profilePicture}`
-                                    : `${defaultProfilePicture}`)
-                            }
-                            className="size-[14rem] rounded-full"
-                            style={{ border: '1px solid #d1d5db' }}
-                            alt="Profile"
-                        />
+                    <div className="relative size-[14rem] mx-auto flex justify-center items-center overflow-hidden rounded-full border border-[#d1d5db] bg-slate-100">
+                        {showProfilePictureSkeleton && (
+                            <Skeleton
+                                shape="circle"
+                                width="100%"
+                                height="100%"
+                                className="absolute inset-0 !rounded-full"
+                            />
+                        )}
+
+                        {!showProfilePictureError && (
+                            <img
+                                key={profilePictureSource}
+                                src={profilePictureSource}
+                                className={`absolute inset-0 size-full rounded-full object-cover transition-opacity duration-300 ${
+                                    profilePictureStatus === 'loaded' ? 'opacity-100' : 'opacity-0'
+                                }`}
+                                alt="Profile"
+                                onLoad={() => setProfilePictureStatus('loaded')}
+                                onError={() => setProfilePictureStatus('error')}
+                            />
+                        )}
+
+                        {showProfilePictureError && (
+                            <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-slate-400">
+                                <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-full border border-slate-300 bg-slate-50">
+                                    <i className="pi pi-image text-3xl" aria-hidden="true"></i>
+                                    <span
+                                        className="absolute h-[2px] w-12 rotate-45 rounded-full bg-slate-400"
+                                        aria-hidden="true"
+                                    ></span>
+                                    <span className="sr-only">Gambar gagal dimuat</span>
+                                </span>
+                            </div>
+                        )}
                         <Button
                             onClick={toggleMenuVisibility}
                             ref={buttonRef}

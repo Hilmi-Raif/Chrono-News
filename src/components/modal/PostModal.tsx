@@ -11,6 +11,7 @@ import { Menu } from 'primereact/menu';
 import { useAuth } from '../../hooks/useAuth';
 import { DropdownOption, PostFormData, PostFormErrors } from '../../types/post.ts';
 import { MenuItem } from 'primereact/menuitem';
+import { Skeleton } from 'primereact/skeleton';
 import Quill from 'quill';
 import defaultThumbnail from '../../../public/thumbnail.svg';
 
@@ -122,6 +123,9 @@ const PostModal = ({
     setCroppedImage,
 }: PostModalProps) => {
     const [isUploadingImage, setIsUploadingImage] = useState(false);
+    const [thumbnailStatus, setThumbnailStatus] = useState<'idle' | 'loading' | 'loaded' | 'error'>(
+        'idle'
+    );
     const { getQuillModules, uploadImage, imageHandler } = useQuillConfig({
         onUploadStateChange: setIsUploadingImage,
     });
@@ -278,13 +282,20 @@ const PostModal = ({
         setIsMenuVisible,
     ]);
 
-    const getThumbnailSource = () => {
+    const thumbnailSource = useMemo(() => {
         if (croppedImage) return croppedImage;
         if (data?.thumbnail && typeof data.thumbnail === 'string' && data.thumbnail.trim() !== '') {
             return `${data.thumbnail}`;
         }
         return defaultThumbnail;
-    };
+    }, [croppedImage, data?.thumbnail]);
+
+    useEffect(() => {
+        setThumbnailStatus(thumbnailSource ? 'loading' : 'idle');
+    }, [thumbnailSource]);
+
+    const showThumbnailSkeleton = thumbnailStatus === 'loading';
+    const showThumbnailError = thumbnailStatus === 'error';
 
     const editorKey = isEditMode ? `edit-${data.userID}-${visible}` : `create-${visible}`;
 
@@ -366,32 +377,61 @@ const PostModal = ({
                         ''
                     )}
 
-                    <div className="w-full flex flex-col ">
+                    <div className="w-full flex flex-col">
                         <label htmlFor="name" className="block mb-1 font-medium">
                             Thumbnail
                         </label>
                         <div
                             style={{ aspectRatio: '16/9' }}
-                            className={`relative rounded-md w-full overflow-hidden`}
+                            className="relative w-full overflow-hidden rounded-md border border-[#d1d5db] bg-slate-100"
                         >
-                            <img
-                                src={getThumbnailSource()}
-                                className="h-full w-full object-cover rounded-md border-none z-10"
-                                style={{ border: '1px solid #d1d5db' }}
-                                alt="Thumbnail"
-                            />
+                            {showThumbnailSkeleton && (
+                                <Skeleton
+                                    width="100%"
+                                    height="100%"
+                                    className="absolute inset-0 !rounded-none"
+                                />
+                            )}
+
+                            {!showThumbnailError && (
+                                <img
+                                    key={thumbnailSource}
+                                    src={thumbnailSource}
+                                    className={`absolute inset-0 h-full w-full object-cover rounded-md border-none transition-opacity duration-300 ${
+                                        thumbnailStatus === 'loaded' ? 'opacity-100' : 'opacity-0'
+                                    }`}
+                                    alt=""
+                                    aria-hidden={thumbnailStatus !== 'loaded'}
+                                    onLoad={() => setThumbnailStatus('loaded')}
+                                    onError={() => setThumbnailStatus('error')}
+                                />
+                            )}
+
+                            {showThumbnailError && (
+                                <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-slate-400">
+                                    <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-full border border-slate-300 bg-slate-50">
+                                        <i className="pi pi-image text-3xl" aria-hidden="true"></i>
+                                        <span
+                                            className="absolute h-[2px] w-12 rotate-45 rounded-full bg-slate-400"
+                                            aria-hidden="true"
+                                        ></span>
+                                        <span className="sr-only">Gambar gagal dimuat</span>
+                                    </span>
+                                </div>
+                            )}
+
                             <Button
                                 onClick={toggleMenuVisibility}
                                 ref={buttonRef}
                                 type="button"
                                 text
                                 severity="secondary"
-                                className="absolute inset-0 w-full h-full bg-transparent flex items-center justify-center hover:bg-black/20 transition"
+                                className="absolute inset-0 z-20 w-full h-full bg-transparent flex items-center justify-center hover:bg-black/20 transition"
                             />
                             <div ref={menuContainerRef}>
                                 <Menu
                                     key={menuKey}
-                                    className={`${isMenuVisible ? 'visible' : 'hidden'} normal text-md w-fit shadow-md absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 menu-news`}
+                                    className={`${isMenuVisible ? 'visible' : 'hidden'} normal text-md w-fit shadow-md absolute z-30 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 menu-news`}
                                     model={menuItems}
                                 />
                             </div>
@@ -443,7 +483,7 @@ const PostModal = ({
                         {errors.summary && <small className="p-error">{errors.summary}</small>}
                     </div>
 
-                    <div className="w-full mb-12">
+                    <div className="w-full mb-2">
                         <label htmlFor="content" className="block mb-1 font-medium">
                             Konten
                         </label>
@@ -461,7 +501,6 @@ const PostModal = ({
                         </div>
                         {errors.content && <small className="p-error">{errors.content}</small>}
                     </div>
-                    <div className={`my-4 lg:my-1`}></div>
                     <Button
                         disabled={submitLoading || isUploadingImage}
                         className="w-full flex items-center justify-center font-normal"
