@@ -56,6 +56,7 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
     const slugFromUrl = params.slug;
     const searchQueryFromUrl = queryParams.get('query') || '';
     const topPostRange = queryParams.get('top_range') || 'all';
+    const regularPostSize = isPostPage ? 5 : 3;
 
     const [activeIndex, setActiveIndex] = useState(0);
     const [searchQuery, setSearchQuery] = useState(searchQueryFromUrl);
@@ -159,7 +160,7 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
         queryKey: headlineQueryKey,
         queryFn: ({ signal }) => {
             return PostService.searchPost(
-                { categoryName: currentCategory, size: 1, page: headlinePostPage },
+                { categoryName: currentCategory, size: 4, page: headlinePostPage },
                 signal
             );
         },
@@ -178,20 +179,31 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
             : null;
     }, [headlineResult]);
 
+    const headlineSubPosts: Post[] = useMemo(() => {
+        const data = headlineResult?.data;
+        return Array.isArray(data) && data.length > 1
+            ? data.slice(1, 4).map((p: Post) => ({ ...p, createdAt: getCardDate(p.createdAt) }))
+            : [];
+    }, [headlineResult]);
+
+    const topPostsExcludeIds = useMemo(() => {
+        const ids = [headlinePost?.id, ...headlineSubPosts.map((p) => p.id)];
+        return ids.filter((id): id is number => id !== null && id !== undefined).join(',');
+    }, [headlinePost?.id, headlineSubPosts]);
+
     const topPostsQuery = useQuery({
-        queryKey: ['posts', 'top', currentCategory, topPostRange, headlinePost?.id, topPostPage],
+        queryKey: ['posts', 'top', currentCategory, topPostRange, topPostsExcludeIds, topPostPage],
         queryFn: ({ signal }) => {
             const { start, end } = getDateRangeInUnix(topPostRange);
-            const excludeIds = headlinePost?.id != null ? headlinePost.id.toString() : '';
             return PostService.searchPost(
                 {
                     categoryName: currentCategory,
                     sort: '-view_count',
-                    size: 3,
+                    size: 4,
                     page: topPostPage,
                     startDate: start || undefined,
                     endDate: end || undefined,
-                    excludeIds,
+                    excludeIds: topPostsExcludeIds,
                 },
                 signal
             );
@@ -215,17 +227,28 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
     const regularPostsExcludeIds = useMemo(() => {
         const idsToExclude = isPostPage
             ? [mainPost?.id]
-            : [headlinePost?.id, ...(topPostsResult?.data || []).map((p: Post) => p.id)];
+            : [
+                  headlinePost?.id,
+                  ...headlineSubPosts.map((p) => p.id),
+                  ...(topPostsResult?.data || []).map((p: Post) => p.id),
+              ];
         return idsToExclude.filter((id): id is number => id !== null && id !== undefined).join(',');
-    }, [isPostPage, mainPost?.id, headlinePost?.id, topPostsResult?.data]);
+    }, [isPostPage, mainPost?.id, headlinePost?.id, headlineSubPosts, topPostsResult?.data]);
 
     const regularPostsQuery = useQuery({
-        queryKey: ['posts', 'regular', currentCategory, regularPostsExcludeIds, regularPostPage],
+        queryKey: [
+            'posts',
+            'regular',
+            currentCategory,
+            regularPostsExcludeIds,
+            regularPostPage,
+            regularPostSize,
+        ],
         queryFn: ({ signal }) => {
             return PostService.searchPost(
                 {
                     categoryName: isPostPage ? '' : currentCategory,
-                    size: 5,
+                    size: regularPostSize,
                     page: regularPostPage,
                     excludeIds: regularPostsExcludeIds,
                 },
@@ -235,7 +258,8 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
         enabled:
             shouldFetchSpecificData('posts_regular', 'posts_regularError') &&
             !isSearchPage &&
-            (isPostPage ? !!mainPost : !!headlineResult && !!topPostsResult),
+            isPostPage &&
+            !!mainPost,
         staleTime: 0,
         gcTime: 0,
     });
@@ -246,9 +270,11 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
             dataSource = regularPostsQuery.data;
         }
         const data = dataSource?.data;
-        return Array.isArray(data)
+        const regularPosts = Array.isArray(data)
             ? data.map((p) => ({ ...p, createdAt: getCardDate(p.createdAt) }))
             : [];
+
+        return isPostPage ? regularPosts : [];
     }, [regularPostsResult, regularPostsQuery.data, isPostPage, postId, manualData?.post?.id]);
 
     const searchQueryQuery = useQuery({
@@ -822,6 +848,7 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
     return {
         categories,
         headlinePost,
+        headlineSubPosts,
         topPosts,
         posts,
         searchPosts,
@@ -851,7 +878,7 @@ const usePost = (InitialDataProp: InitialDataStructure | undefined, isDesktop: b
         topPostPagination: topPostsResult?.pagination,
         regularPostPagination: regularPostsResult?.pagination,
         searchPostPagination: searchResult?.pagination,
-        sizes: { headline: 1, top: 3, regular: 5, search: 5 },
+        sizes: { headline: 4, top: 4, regular: regularPostSize, search: 5 },
         handlePageChange,
         refetchAll,
     };

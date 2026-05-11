@@ -77,7 +77,7 @@ export default async function initialDataUtils(pathname: string, searchParams: U
             try {
                 const headlineRes = await PostService.searchPost({
                     categoryName: currentCategory,
-                    size: 1,
+                    size: 4,
                     page: headlinePage,
                 });
 
@@ -103,7 +103,7 @@ export default async function initialDataUtils(pathname: string, searchParams: U
                 const topRes = await PostService.searchPost({
                     categoryName: currentCategory,
                     sort: '-view_count',
-                    size: 3,
+                    size: 4,
                     page: topPage,
                     startDate: start || undefined,
                     endDate: end || undefined,
@@ -150,7 +150,7 @@ export default async function initialDataUtils(pathname: string, searchParams: U
         initialData.generalError = true;
     }
 
-    if (postIdMatch || pathname.startsWith('/berita')) {
+    if (postIdMatch) {
         try {
             const excludeIds = [
                 ...(initialData.posts_headline?.data || []).map((p: Post) => p.id),

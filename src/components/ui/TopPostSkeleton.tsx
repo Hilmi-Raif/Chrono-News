@@ -9,7 +9,7 @@ const TopPostSkeleton: React.FC<TopPostSkeletonProps> = ({ topPostSize }) => {
 
     return (
         <div className="mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {skeletonItems.map((_, index) => (
                     <div key={index} className="break-all">
                         <div className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg flex flex-col h-full">

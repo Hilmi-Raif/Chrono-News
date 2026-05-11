@@ -16,6 +16,7 @@ import RegularPost from '../../components/post/RegularPost.tsx';
 import LoadingRetry from '../../components/ui/LoadingRetry.tsx';
 import EmptyData from '../../components/ui/EmptyData.tsx';
 import MiniEmptyData from '../../components/ui/MiniEmptyData.tsx';
+import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 import { Dropdown } from 'primereact/dropdown';
 import { Skeleton } from 'primereact/skeleton';
 import SafeImage from '../../components/ui/SafeImage.tsx';
@@ -44,6 +45,7 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
     const {
         categories,
         headlinePost,
+        headlineSubPosts,
         topPosts,
         posts,
         searchPosts,
@@ -237,34 +239,97 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
                 <h3 className="text-[#4b5563] mb-3 text-xl">
                     {loading ? <Skeleton width="10rem" /> : 'Berita Terkini'}
                 </h3>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
+                    <section className="flex flex-col h-full">
+                        {loading ? (
+                            <FadeWrapper key="headline-loading">
+                                <HeadlinePost
+                                    loading={true}
+                                    headlinePost={null}
+                                    headlinePostPage={headlinePostPage}
+                                    handlePageChange={(page) => handlePageChange('headline', page)}
+                                    headlinePostPagination={headlinePostPagination}
+                                    headlineSize={sizes.headline}
+                                    handleCategoryChange={handleCategoryChange}
+                                />
+                            </FadeWrapper>
+                        ) : hasNoHeadline ? (
+                            <FadeWrapper key="headline-empty">
+                                <MiniEmptyData message="Tidak ada berita terkini untuk ditampilkan." />
+                            </FadeWrapper>
+                        ) : (
+                            <FadeWrapper key="headline-data">
+                                <HeadlinePost
+                                    loading={false}
+                                    headlinePost={headlinePost}
+                                    headlinePostPage={headlinePostPage}
+                                    handlePageChange={(page) => handlePageChange('headline', page)}
+                                    headlinePostPagination={headlinePostPagination}
+                                    headlineSize={sizes.headline}
+                                    handleCategoryChange={handleCategoryChange}
+                                />
+                            </FadeWrapper>
+                        )}
+                    </section>
+
+                    <section className="flex flex-col h-full">
+                        {loading ? (
+                            <FadeWrapper key="regular-loading" className="flex-1">
+                                <RegularPost
+                                    loading={true}
+                                    post={null}
+                                    postPage={regularPostPage}
+                                    handlePageChange={(page) => handlePageChange('regular', page)}
+                                    postSize={sizes.regular}
+                                    postPagination={undefined}
+                                    handleCategoryChange={handleCategoryChange}
+                                    compact
+                                    fillHeight
+                                    classKu="flex-1"
+                                />
+                            </FadeWrapper>
+                        ) : headlineSubPosts.length === 0 ? (
+                            <FadeWrapper
+                                key="regular-empty"
+                                className="flex-1 flex items-center justify-center"
+                            >
+                                <MiniEmptyData message="Tidak ada berita lainnya untuk ditampilkan." />
+                            </FadeWrapper>
+                        ) : (
+                            <FadeWrapper key="regular-data" className="flex-1 flex flex-col">
+                                <RegularPost
+                                    loading={false}
+                                    post={headlineSubPosts}
+                                    postPage={regularPostPage}
+                                    handlePageChange={(page) => handlePageChange('regular', page)}
+                                    postSize={sizes.regular}
+                                    postPagination={undefined}
+                                    handleCategoryChange={handleCategoryChange}
+                                    compact
+                                    fillHeight
+                                    classKu="flex-1 flex flex-col"
+                                />
+                            </FadeWrapper>
+                        )}
+                    </section>
+                </div>
                 {loading ? (
-                    <FadeWrapper key="headline-loading">
-                        <HeadlinePost
-                            loading={true}
-                            headlinePost={null}
-                            headlinePostPage={headlinePostPage}
-                            handlePageChange={(page) => handlePageChange('headline', page)}
-                            headlinePostPagination={headlinePostPagination}
-                            headlineSize={sizes.headline}
-                            handleCategoryChange={handleCategoryChange}
-                        />
-                    </FadeWrapper>
-                ) : hasNoHeadline ? (
-                    <FadeWrapper key="headline-empty">
-                        <MiniEmptyData message="Tidak ada berita terkini untuk ditampilkan." />
-                    </FadeWrapper>
+                    <div className="flex justify-center mt-4">
+                        <Skeleton width="20rem" height="2.5rem" />
+                    </div>
                 ) : (
-                    <FadeWrapper key="headline-data">
-                        <HeadlinePost
-                            loading={false}
-                            headlinePost={headlinePost}
-                            headlinePostPage={headlinePostPage}
-                            handlePageChange={(page) => handlePageChange('headline', page)}
-                            headlinePostPagination={headlinePostPagination}
-                            headlineSize={sizes.headline}
-                            handleCategoryChange={handleCategoryChange}
+                    headlinePostPagination &&
+                    (headlinePostPagination.totalItem || 0) > 0 && (
+                        <Paginator
+                            pageLinkSize={1}
+                            first={(headlinePostPage - 1) * sizes.headline}
+                            rows={sizes.headline}
+                            totalRecords={headlinePostPagination.totalItem || 0}
+                            onPageChange={(e) => handlePageChange('headline', e.page + 1)}
+                            template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+                            className="mt-4 flex justify-center"
                         />
-                    </FadeWrapper>
+                    )
                 )}
 
                 <div className="w-full flex md:items-center justify-between mt-4 md:flex-row flex-col text-start">
@@ -318,39 +383,6 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
                             handlePageChange={(page) => handlePageChange('top', page)}
                             topPostSize={sizes.top}
                             topPostPagination={topPostPagination}
-                            handleCategoryChange={handleCategoryChange}
-                        />
-                    </FadeWrapper>
-                )}
-
-                <h3 className="text-[#4b5569] text-xl my-3">
-                    {loading ? <Skeleton width="10rem" /> : 'Berita Lainnya'}
-                </h3>
-                {loading ? (
-                    <FadeWrapper key="regular-loading">
-                        <RegularPost
-                            loading={true}
-                            post={null}
-                            postPage={regularPostPage}
-                            handlePageChange={(page) => handlePageChange('regular', page)}
-                            postSize={sizes.regular}
-                            postPagination={regularPostPagination}
-                            handleCategoryChange={handleCategoryChange}
-                        />
-                    </FadeWrapper>
-                ) : hasNoRegularPosts ? (
-                    <FadeWrapper key="regular-empty">
-                        <MiniEmptyData message="Tidak ada berita lainnya untuk ditampilkan." />
-                    </FadeWrapper>
-                ) : (
-                    <FadeWrapper key="regular-data">
-                        <RegularPost
-                            loading={false}
-                            post={posts}
-                            postPage={regularPostPage}
-                            handlePageChange={(page) => handlePageChange('regular', page)}
-                            postSize={sizes.regular}
-                            postPagination={regularPostPagination}
                             handleCategoryChange={handleCategoryChange}
                         />
                     </FadeWrapper>
@@ -443,7 +475,7 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
             {error && !isRetrying ? (
                 <LoadingRetry visibleConnectionError={true} onRetry={handleRetry} />
             ) : (
-                <div className="relative min-h-screen p-4 mx-auto max-w-4xl bg-white xl:pt-[4.6rem] pt-32 rounded-md">
+                <div className="relative min-h-screen p-4 mx-auto max-w-6xl bg-white xl:pt-[4.6rem] pt-32 rounded-md">
                     {renderContent()}
                 </div>
             )}

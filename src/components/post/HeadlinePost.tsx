@@ -1,4 +1,3 @@
-import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
 import { useNavigate } from 'react-router-dom';
 import thumbnail from '../../../public/thumbnail.svg';
 import { slugify } from '../../utils/postUtils.ts';
@@ -44,13 +43,13 @@ const HeadlinePost: React.FC<HeadlinePostProps> = ({
     }
 
     return (
-        <div>
-            <div className="grid grid-cols-1">
+        <div className="h-full flex flex-col">
+            <div className="grid grid-cols-1 flex-1">
                 <div
                     key={headlinePost.id}
-                    className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg w-full break-word"
+                    className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg w-full break-word flex flex-col h-[474px] sm:h-[504px]"
                 >
-                    <div className="relative w-full aspect-[16/9] bg-gray-200 rounded-t-lg overflow-hidden">
+                    <div className="relative w-full flex-1 bg-gray-200 rounded-t-lg overflow-hidden shrink-0">
                         <SafeImage
                             src={
                                 headlinePost.thumbnail
@@ -96,17 +95,6 @@ const HeadlinePost: React.FC<HeadlinePostProps> = ({
                     </div>
                 </div>
             </div>
-            {headlinePostPagination && (headlinePostPagination.totalItem || 0) > 0 && (
-                <Paginator
-                    pageLinkSize={1}
-                    first={(headlinePostPage - 1) * headlineSize}
-                    rows={headlineSize}
-                    totalRecords={headlinePostPagination.totalItem || 0}
-                    onPageChange={(e: PaginatorPageChangeEvent) => handlePageChange(e.page + 1)}
-                    template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-                    className="mt-4"
-                />
-            )}
         </div>
     );
 };

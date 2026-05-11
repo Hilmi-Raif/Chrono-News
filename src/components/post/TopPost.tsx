@@ -44,7 +44,7 @@ const TopPost: FC<TopPostProps> = ({
 
     return (
         <div className="mt-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {topPost.map((post) => (
                     <div key={post.id} className="break-word">
                         <div className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg flex flex-col h-full">
