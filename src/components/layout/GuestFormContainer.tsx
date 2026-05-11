@@ -8,8 +8,8 @@ interface GuestFormContainerProps {
 
 const GuestFormContainer: React.FC<GuestFormContainerProps> = ({ children, title = '' }) => {
     return (
-        <div className="flex justify-center flex-col items-center min-h-screen max-h-fit bg-cover bg-center bg-white xl:bg-[#f2f2f2]">
-            <div className=" xl:w-[32%] w-[88%] flex items-center justify-center bg-white flex-col rounded-xl xl:shadow-md my-10">
+        <div className="flex justify-center flex-col items-center min-h-screen max-h-fit bg-cover bg-center bg-surface-0 xl:bg-surface-ground">
+            <div className=" xl:w-[32%] w-[88%] flex items-center justify-center bg-surface-0 flex-col rounded-xl xl:shadow-md my-10">
                 <div className="xl:p-10 sm:py-10 w-full">
                     <div className="flex items-center justify-center flex-col">
                         <img

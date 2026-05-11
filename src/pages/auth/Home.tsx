@@ -56,19 +56,19 @@ const Home = () => {
 
     const list: ListItem[] = [
         {
-            icon: <i className="pi pi-users text-[#f59e0b]" style={{ fontSize: '2rem' }}></i>,
+            icon: <i className="pi pi-users text-primary" style={{ fontSize: '2rem' }}></i>,
             title: 'Jurnalis',
             desc: 'Kelola jurnalis',
             route: '/admin/jurnalis',
         },
         {
-            icon: <i className="pi pi-paperclip text-[#f59e0b]" style={{ fontSize: '2rem' }}></i>,
+            icon: <i className="pi pi-paperclip text-primary" style={{ fontSize: '2rem' }}></i>,
             title: 'Kategori',
             desc: 'Kelola kategori',
             route: '/admin/kategori',
         },
         {
-            icon: <i className="pi pi-file text-[#f59e0b]" style={{ fontSize: '2rem' }}></i>,
+            icon: <i className="pi pi-file text-primary" style={{ fontSize: '2rem' }}></i>,
             title: 'Berita',
             desc: 'Kelola berita',
             route: '/admin/berita',
@@ -84,8 +84,7 @@ const Home = () => {
                 label: 'Jumlah Pengunjung',
                 data: data.map((item: PostData) => item.viewCount || 0),
                 backgroundColor: 'rgba(245, 158, 11,0.2)',
-                borderColor: '#f59e0b',
-                borderWidth: 1,
+                borderWidth: 0,
             },
         ],
     };
@@ -147,7 +146,7 @@ const Home = () => {
                         ))}
                     </div>
                     <div className="w-full px-4 pb-4 h-fit">
-                        <div className="card shadow-md rounded-xl bg-white p-4 h-fit">
+                        <div className="card shadow-md rounded-xl bg-surface-0 p-4 h-fit">
                             <LoadingRetry
                                 visibleConnectionError={visibleConnectionError}
                                 onRetry={refetch}

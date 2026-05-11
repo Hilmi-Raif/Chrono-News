@@ -1,6 +1,6 @@
 const NotFound = () => {
     return (
-        <div className="flex flex-col items-center justify-center h-screen text-[#49576b] text-center">
+        <div className="flex flex-col items-center justify-center h-screen text-text-color-secondary text-center">
             <svg
                 width="60"
                 height="60"
@@ -9,8 +9,8 @@ const NotFound = () => {
                 stroke="currentColor"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className="text-[#49576b]"
-                color="#49576b"
+                className="text-text-color-secondary"
+                color="var(--text-color-secondary)"
             >
                 <path d="M15.5 4.8c2 3 1.7 7-1 9.7h0l4.3 4.3-4.3-4.3a7.8 7.8 0 01-9.8 1m-2.2-2.2A7.8 7.8 0 0113.2 2.4M2 18L18 2"></path>
             </svg>

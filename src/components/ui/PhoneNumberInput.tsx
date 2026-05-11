@@ -76,10 +76,10 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
         return (
             <div className="flex align-items-center gap-2 white-space-nowrap">
                 <span className="text-xl">{option.flag}</span>
-                <span className="font-medium text-gray-500 w-2rem inline-block">
+                <span className="font-medium text-text-color-secondary w-2rem inline-block">
                     {option.dialCode}
                 </span>
-                <span className="text-gray-900">{option.name}</span>
+                <span className="text-text-color">{option.name}</span>
             </div>
         );
     };
@@ -101,7 +101,7 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
 
             <label
                 htmlFor="phonenumber"
-                className={`block mb-1 font-medium ${error ? 'p-error' : 'text-[#48525f]'}`}
+                className={`block mb-1 font-medium ${error ? 'p-error' : 'text-text-color-secondary'}`}
             >
                 {label}
             </label>
@@ -144,7 +144,9 @@ const PhoneNumberInput: React.FC<PhoneNumberInputProps> = ({
             </div>
 
             {error && <small className="p-error block mt-1">{error}</small>}
-            {!error && tip !== '' && <small className="text-gray-500 block mt-1">{tip}</small>}
+            {!error && tip !== '' && (
+                <small className="text-text-color-secondary block mt-1">{tip}</small>
+            )}
         </div>
     );
 };

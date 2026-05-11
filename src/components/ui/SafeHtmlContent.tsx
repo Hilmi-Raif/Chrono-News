@@ -71,7 +71,7 @@ const SafeHtmlContent: React.FC<SafeHtmlContentProps> = ({ content, className })
         },
     };
 
-    return <div className={`text-gray-700 ${className || ''}`}>{parse(content, options)}</div>;
+    return <div className={`text-text-color ${className || ''}`}>{parse(content, options)}</div>;
 };
 
 export default SafeHtmlContent;

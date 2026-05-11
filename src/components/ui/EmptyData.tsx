@@ -15,10 +15,10 @@ const EmptyData: React.FC<EmptyDataProps> = ({ message, className }) => {
                     className="w-48 md:w-64 h-auto mb-4 md:mb-6"
                     alt="emptyData"
                 />
-                <h3 className="text-[#4d555e] text-xl md:text-2xl font-semibold mb-2 md:mb-3">
+                <h3 className="text-text-color-secondary text-xl md:text-2xl font-semibold mb-2 md:mb-3">
                     Data Tidak Ditemukan
                 </h3>
-                <p className="text-gray-600 max-w-xs md:max-w-md text-base md:text-lg">
+                <p className="text-text-color-secondary max-w-xs md:max-w-md text-base md:text-lg">
                     {message ||
                         'Maaf, kami tidak dapat menemukan data yang Anda cari. Coba sesuaikan filter atau kata kunci Anda.'}
                 </p>

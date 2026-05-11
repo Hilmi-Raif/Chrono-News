@@ -383,7 +383,7 @@ const PostModal = ({
                         </label>
                         <div
                             style={{ aspectRatio: '16/9' }}
-                            className="relative w-full overflow-hidden rounded-md border border-[#d1d5db] bg-slate-100"
+                            className="modal-media-skeleton relative w-full overflow-hidden rounded-md border border-surface-border bg-surface-100"
                         >
                             {showThumbnailSkeleton && (
                                 <Skeleton
@@ -408,11 +408,11 @@ const PostModal = ({
                             )}
 
                             {showThumbnailError && (
-                                <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-slate-400">
-                                    <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-full border border-slate-300 bg-slate-50">
+                                <div className="absolute inset-0 flex items-center justify-center bg-surface-100 text-text-secondary">
+                                    <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-full border border-surface-border bg-surface-0">
                                         <i className="pi pi-image text-3xl" aria-hidden="true"></i>
                                         <span
-                                            className="absolute h-[2px] w-12 rotate-45 rounded-full bg-slate-400"
+                                            className="absolute h-[2px] w-12 rotate-45 rounded-full bg-text-secondary"
                                             aria-hidden="true"
                                         ></span>
                                         <span className="sr-only">Gambar gagal dimuat</span>
@@ -465,7 +465,7 @@ const PostModal = ({
                     <div className="w-full">
                         <label
                             htmlFor="summary"
-                            className={`block mb-1 font-medium ${errors.summary ? 'p-error' : 'text-[#48525f]'}`}
+                            className={`block mb-1 font-medium ${errors.summary ? 'p-error' : 'text-text-color-secondary'}`}
                         >
                             Ringkasan
                         </label>
@@ -492,7 +492,10 @@ const PostModal = ({
                                 <div className="loading-container">
                                     <i
                                         className="pi pi-spin pi-spinner text-[3rem]"
-                                        style={{ color: '#64748b', animationDuration: '1s' }}
+                                        style={{
+                                            color: 'var(--text-color-secondary)',
+                                            animationDuration: '1s',
+                                        }}
                                     ></i>
                                 </div>
                             )}
@@ -509,7 +512,7 @@ const PostModal = ({
                         {submitLoading || isUploadingImage ? (
                             <i
                                 className="pi pi-spin pi-spinner text-[24px]"
-                                style={{ color: '#475569' }}
+                                style={{ color: 'var(--text-color-secondary)' }}
                             ></i>
                         ) : (
                             'Submit'

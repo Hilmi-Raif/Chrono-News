@@ -10,6 +10,7 @@ import { sanitizeHtmlContent } from '../../utils/sanitizeHtml.ts';
 import SafeImage from '../ui/SafeImage.tsx';
 import SafeHtmlContent from '../ui/SafeHtmlContent.tsx';
 import DisqusSkeleton from '../ui/DisqusSkeleton.tsx';
+import { useTheme } from '../../context/useTheme.ts';
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -19,20 +20,43 @@ interface MainPostProps {
 }
 
 const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) => {
+    const { theme, themeReady } = useTheme();
     const [showUpdatedAt, setShowUpdatedAt] = useState(false);
     const [disqusReady, setDisqusReady] = useState(false);
 
     useEffect(() => {
-        if (!mainPost?.id) return;
+        if (!mainPost?.id || !themeReady) return;
 
         setDisqusReady(false);
 
         let checkInterval: number | undefined;
         let failureTimeout: number | undefined;
+        const reloadTimeout: number | undefined = window.setTimeout(() => {
+            if (window.DISQUS) {
+                window.DISQUS.reset({
+                    reload: true,
+                    config: disqusConfig,
+                });
+            } else {
+                window.disqus_config = disqusConfig;
+
+                const existingScript = document.querySelector(`script[src*="disqus.com/embed.js"]`);
+                if (existingScript) {
+                    existingScript.remove();
+                }
+
+                const script = document.createElement('script');
+                script.src = `https://${import.meta.env.VITE_DISQUS_SHORTNAME}.disqus.com/embed.js`;
+                script.setAttribute('data-timestamp', Date.now().toString());
+                script.async = true;
+                document.body.appendChild(script);
+            }
+        }, 0);
 
         const cleanup = () => {
             if (checkInterval) clearInterval(checkInterval);
             if (failureTimeout) clearTimeout(failureTimeout);
+            if (reloadTimeout) clearTimeout(reloadTimeout);
         };
 
         const disqusConfig: DisqusConfigFunction = function (this: DisqusConfig) {
@@ -47,8 +71,13 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
                     checkInterval = window.setInterval(() => {
                         const iframe = disqusContainer.querySelector('iframe');
                         if (iframe && iframe.clientHeight > 50) {
-                            setDisqusReady(true);
-                            cleanup();
+                            window.setTimeout(
+                                () => {
+                                    setDisqusReady(true);
+                                    cleanup();
+                                },
+                                theme === 'dark' ? 900 : 150
+                            );
                         }
                     }, 100);
 
@@ -60,28 +89,8 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
             ];
         };
 
-        if (window.DISQUS) {
-            window.DISQUS.reset({
-                reload: true,
-                config: disqusConfig,
-            });
-        } else {
-            window.disqus_config = disqusConfig;
-
-            const existingScript = document.querySelector(`script[src*="disqus.com/embed.js"]`);
-            if (existingScript) {
-                existingScript.remove();
-            }
-
-            const script = document.createElement('script');
-            script.src = `https://${import.meta.env.VITE_DISQUS_SHORTNAME}.disqus.com/embed.js`;
-            script.setAttribute('data-timestamp', Date.now().toString());
-            script.async = true;
-            document.body.appendChild(script);
-        }
-
         return cleanup;
-    }, [mainPost?.id]);
+    }, [mainPost?.id, theme, themeReady]);
 
     useEffect(() => {
         if (!mainPost) return;
@@ -140,7 +149,7 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
             label: 'Beranda',
             template: () => (
                 <span
-                    className="text-gray-700 cursor-pointer font-[600]"
+                    className="text-text-color-secondary cursor-pointer font-[600]"
                     onClick={() => {
                         handleCategoryChange('beranda');
                     }}
@@ -154,7 +163,7 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
             label: mainPost.category?.name || 'Kategori',
             template: () => (
                 <span
-                    className="text-[#f59e0b] cursor-pointer font-[600]"
+                    className="text-primary cursor-pointer font-[600]"
                     onClick={() => {
                         if (mainPost.category?.name) {
                             handleCategoryChange(mainPost.category.name.toLowerCase());
@@ -174,10 +183,10 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
             <main className="break-word relative">
                 <BreadCrumb model={breadcrumbItems} />
 
-                <h1 className="text-gray-700 font-semibold text-3xl">{mainPost.title}</h1>
-                <small className="text-gray-700 mb-2 mt-2">{mainPost.summary}</small>
+                <h1 className="text-text-color font-semibold text-3xl">{mainPost.title}</h1>
+                <small className="text-text-color-secondary mb-2 mt-2">{mainPost.summary}</small>
 
-                <div className="relative w-full aspect-[16/9] bg-gray-200 overflow-hidden rounded-xl shadow-sm my-4">
+                <div className="relative w-full aspect-[16/9] bg-surface-200 overflow-hidden rounded-xl shadow-sm my-4">
                     <SafeImage
                         src={mainPost?.thumbnail ? mainPost?.thumbnail : (thumbnail as string)}
                         alt={mainPost.title || 'Post Thumbnail'}
@@ -193,7 +202,7 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
                     <div className="flex gap-2 items-center">
                         <div
                             className="relative size-[2.6rem] lg:size-[3rem] shrink-0 rounded-full overflow-hidden"
-                            style={{ border: '1px solid #d1d5db' }}
+                            style={{ border: '1px solid var(--surface-border)' }}
                         >
                             <SafeImage
                                 src={
@@ -207,10 +216,10 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
                         </div>
 
                         <div>
-                            <p className="text-gray-700 text:sm md:text-md font-medium flex items-center gap-1 w-fit">
+                            <p className="text-text-color text:sm md:text-md font-medium flex items-center gap-1 w-fit">
                                 {mainPost.user?.name}
                             </p>
-                            <p className="text-gray-700 text-xs md:text-sm flex items-center">
+                            <p className="text-text-color-secondary text-xs md:text-sm flex items-center">
                                 Diterbitkan: {mainPost.createdAt}
                                 {mainPost.updatedAt && (
                                     <button
@@ -228,7 +237,7 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
                                 className={`transition-all duration-300 ease-in-out overflow-hidden ${showUpdatedAt && mainPost.updatedAt ? 'max-h-8 opacity-100' : 'max-h-0 opacity-0'}`}
                             >
                                 {mainPost.updatedAt && (
-                                    <p className="text-gray-700 text-xs md:text-sm flex items-center ">
+                                    <p className="text-text-color-secondary text-xs md:text-sm flex items-center ">
                                         Diperbarui: {mainPost.updatedAt}
                                     </p>
                                 )}
@@ -245,28 +254,25 @@ const MainPost: React.FC<MainPostProps> = ({ mainPost, handleCategoryChange }) =
                     </div>
                 </div>
 
-                <div
-                    className="w-full my-4 opacity-30"
-                    style={{ borderTop: '1px solid #8496af' }}
-                ></div>
+                <div className="article-detail-divider" aria-hidden="true"></div>
 
                 <SafeHtmlContent
                     content={sanitizedContent}
                     className="content-view min-h-0 ql-editor"
                 />
 
-                <div
-                    className="w-full my-4 opacity-30"
-                    style={{ borderTop: '1px solid #8496af' }}
-                ></div>
+                <div className="article-detail-divider" aria-hidden="true"></div>
 
-                {!disqusReady && <DisqusSkeleton />}
+                {(!themeReady || !disqusReady) && (
+                    <DisqusSkeleton key={`disqus-skeleton-${theme}`} theme={theme} />
+                )}
 
                 <div
                     id="disqus_thread"
-                    className="mt-8 mb-4"
+                    className="mt-8 mb-4 disqus-host"
+                    data-theme={theme}
                     style={
-                        !disqusReady
+                        !themeReady || !disqusReady
                             ? {
                                   position: 'absolute',
                                   visibility: 'hidden',

@@ -20,7 +20,7 @@ const LoadingRetry: React.FC<LoadingRetryProps> = ({
         <div
             className={`flex flex-col items-center justify-center text-center h-screen ${className}`}
         >
-            <div className="flex flex-col items-center justify-center text-center h-screen text-[#4b5563]">
+            <div className="flex flex-col items-center justify-center text-center h-screen text-text-color-secondary">
                 {visibleLoadingConnection ? (
                     <div className="flex flex-col font-medium text-2xl md:text-3xl">
                         <p>Memuat Data</p>
@@ -29,7 +29,10 @@ const LoadingRetry: React.FC<LoadingRetryProps> = ({
                         </p>
                         <i
                             className="pi pi-spin pi-spinner text-[3rem]"
-                            style={{ color: '#64748b', animationDuration: '1s' }}
+                            style={{
+                                color: 'var(--text-color-secondary)',
+                                animationDuration: '1s',
+                            }}
                         ></i>
                     </div>
                 ) : visibleConnectionError ? (

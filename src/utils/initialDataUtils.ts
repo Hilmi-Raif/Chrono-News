@@ -98,8 +98,10 @@ export default async function initialDataUtils(pathname: string, searchParams: U
                 const topRange = searchParams.get('top_range') || 'all';
                 const { start, end } = utils.getDateRangeInUnix(topRange);
 
-                const headlinePostId = initialData.posts_headline?.data?.[0]?.id;
-                const excludeIdsForTop = headlinePostId ? String(headlinePostId) : '';
+                const excludeIdsForTop = (initialData.posts_headline?.data || [])
+                    .map((p: Post) => p.id)
+                    .filter((id): id is number => id !== null && id !== undefined)
+                    .join(',');
                 const topRes = await PostService.searchPost({
                     categoryName: currentCategory,
                     sort: '-view_count',

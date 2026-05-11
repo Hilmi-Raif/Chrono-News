@@ -1,9 +1,13 @@
 import React from 'react';
 import { Skeleton } from 'primereact/skeleton';
 
-const DisqusSkeleton: React.FC = () => {
+interface DisqusSkeletonProps {
+    theme?: 'light' | 'dark';
+}
+
+const DisqusSkeleton: React.FC<DisqusSkeletonProps> = () => {
     return (
-        <div className="w-full bg-white text-[#2a2e2e] font-sans border border-gray-200 rounded-md overflow-hidden">
+        <div className="disqus-skeleton w-full text-text-color font-sans border rounded-md overflow-hidden transition-colors duration-150">
             <div className="py-6 text-center">
                 <div className="flex justify-center mb-3">
                     <Skeleton width="140px" height="18px" />
@@ -41,7 +45,7 @@ const DisqusSkeleton: React.FC = () => {
                 </div>
             </div>
 
-            <div className="py-4 flex justify-between items-center border-b border-[#e8e8e8]">
+            <div className="py-4 flex justify-between items-center border-b border-surface-border">
                 <Skeleton
                     width="110px"
                     height="20px"
@@ -61,7 +65,7 @@ const DisqusSkeleton: React.FC = () => {
                 </div>
             </div>
 
-            <div className="py-5 md:p-4 border-b border-[#e8e8e8]">
+            <div className="py-5 md:p-4 border-b border-surface-border">
                 <div className="flex gap-3 mb-4">
                     <div className="hidden md:block shrink-0">
                         <Skeleton shape="circle" size="48px" />
@@ -101,10 +105,10 @@ const DisqusSkeleton: React.FC = () => {
                 </div>
             </div>
 
-            <div className="py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 border-b border-[#e8e8e8]">
+            <div className="py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 border-b border-surface-border">
                 <div className="w-full md:w-auto flex gap-4 items-center">
                     <Skeleton shape="circle" size="20px" />
-                    <div className="w-[1px] h-[14px] bg-[#e8e8e8] hidden md:block"></div>
+                    <div className="w-[1px] h-[14px] bg-surface-border hidden md:block"></div>
                     <Skeleton width="60px" height="16px" />
                 </div>
                 <div className="w-full md:w-auto flex gap-4">
@@ -120,7 +124,7 @@ const DisqusSkeleton: React.FC = () => {
                 </div>
             </div>
 
-            <div className="py-5 flex flex-wrap justify-between items-start gap-2 border-t border-[#e8e8e8]">
+            <div className="py-5 flex flex-wrap justify-between items-start gap-2 border-t border-surface-border">
                 <div className="flex flex-wrap gap-2 w-[calc(100%-110px)] md:w-auto">
                     <Skeleton width="75px" height="14px" className="!w-[90px] md:!w-[75px]" />
                     <Skeleton width="75px" height="14px" className="!w-[90px] md:!w-[75px]" />

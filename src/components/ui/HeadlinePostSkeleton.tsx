@@ -3,7 +3,7 @@ import { Skeleton } from 'primereact/skeleton';
 const HeadlinePostSkeleton: React.FC = () => {
     return (
         <div>
-            <div className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg w-full break-all flex flex-col h-[474px] sm:h-[504px]">
+            <div className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg w-full break-all flex flex-col h-[474px] sm:h-[504px] bg-surface-0">
                 <div className="relative w-full flex-1 rounded-t-lg overflow-hidden shrink-0">
                     <Skeleton
                         width="100%"

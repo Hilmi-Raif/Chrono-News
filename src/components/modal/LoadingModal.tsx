@@ -19,7 +19,7 @@ const LoadingModal = ({ modalLoading }: LoadingModalProps) => {
         >
             <i
                 className="pi pi-spin pi-spinner text-[10vh]"
-                style={{ color: '#f59e0b', animationDuration: '1s' }}
+                style={{ color: 'var(--primary-color)', animationDuration: '1s' }}
             ></i>
         </div>
     );

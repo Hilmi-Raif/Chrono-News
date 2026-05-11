@@ -12,7 +12,7 @@ const TopPostSkeleton: React.FC<TopPostSkeletonProps> = ({ topPostSize }) => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {skeletonItems.map((_, index) => (
                     <div key={index} className="break-all">
-                        <div className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg flex flex-col h-full">
+                        <div className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg flex flex-col h-full bg-surface-0">
                             <div className="relative w-full aspect-[16/9] rounded-t-lg overflow-hidden">
                                 <Skeleton
                                     width="100%"

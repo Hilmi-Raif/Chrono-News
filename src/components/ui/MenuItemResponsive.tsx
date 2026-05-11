@@ -12,6 +12,7 @@ interface MenuItemResponsiveProps {
 const MenuItemResponsive = ({ collapsed, icon, link, label }: MenuItemResponsiveProps) => {
     const location = useLocation();
     const navigate = useNavigate();
+    const isActive = location.pathname === link;
 
     const handleClick = () => {
         if (location.pathname !== link) {
@@ -22,20 +23,29 @@ const MenuItemResponsive = ({ collapsed, icon, link, label }: MenuItemResponsive
     return (
         <MenuItem
             className={`${collapsed ? 'mb-[14.5px]' : 'mb-3'} `}
-            icon={<i style={{ fontSize: '1.25rem' }} className={`${icon}`} />}
+            icon={
+                <i
+                    style={{ fontSize: '1.25rem' }}
+                    className={`${icon} ${isActive ? 'admin-sidebar-active-text' : 'admin-sidebar-text'}`}
+                />
+            }
             component={
                 <Button
-                    className={`flex items-center ${
+                    className={`admin-sidebar-menu-button flex items-center ${
                         collapsed ? 'justify-center' : ''
-                    } rounded hover:bg-[#f49f14] ${
-                        location.pathname === link ? 'bg-[#f59e0b]' : ''
-                    }  transition-all ${collapsed ? 'size-[70%]' : 'size-[100%] px-24'}`}
+                    } rounded ${
+                        isActive ? 'admin-sidebar-menu-button-active bg-primary' : ''
+                    } transition-all ${collapsed ? 'size-[70%]' : 'size-[100%] px-24'}`}
                     text
                     onClick={handleClick}
                 />
             }
         >
-            <h1 className={`text-[18px] ml-5 text-center font-normal`}>{label}</h1>
+            <h1
+                className={`${isActive ? 'admin-sidebar-active-text' : 'admin-sidebar-text'} text-[18px] ml-5 text-center font-normal`}
+            >
+                {label}
+            </h1>
         </MenuItem>
     );
 };

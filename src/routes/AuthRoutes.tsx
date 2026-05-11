@@ -11,7 +11,15 @@ const AuthRoutes = () => {
     const { token, isAuthChecked, role } = useAuth();
 
     if (!isAuthChecked) {
-        return <div style={{ backgroundColor: '#f2f2f2', height: '100vh', width: '100vw' }}></div>;
+        return (
+            <div
+                style={{
+                    backgroundColor: 'var(--surface-ground)',
+                    height: '100vh',
+                    width: '100vw',
+                }}
+            ></div>
+        );
     }
 
     if (!token) {

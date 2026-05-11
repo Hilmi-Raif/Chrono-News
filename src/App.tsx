@@ -1,6 +1,7 @@
 import 'primereact/resources/themes/lara-light-amber/theme.css';
 import 'primeicons/primeicons.css';
 import { AuthProvider } from './context/AuthProvider.tsx';
+import { ThemeProvider } from './context/ThemeProvider.tsx';
 import { ToastProvider } from './context/ToastProvider.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { APIOptions, PrimeReactProvider } from 'primereact/api';
@@ -81,17 +82,22 @@ const App = ({ initialData }: AppProps) => {
 
     return (
         <QueryClientProvider client={queryClient}>
-            <AuthProvider>
-                <PrimeReactProvider value={primeReactConfig}>
-                    <ToastProvider>
-                        <GlobalHeadManager />
-                        <Routes>
-                            <Route path="/*" element={<GuestRoutes initialData={initialData} />} />
-                            <Route path="/admin/*" element={<AuthRoutes />} />
-                        </Routes>
-                    </ToastProvider>
-                </PrimeReactProvider>
-            </AuthProvider>
+            <ThemeProvider>
+                <AuthProvider>
+                    <PrimeReactProvider value={primeReactConfig}>
+                        <ToastProvider>
+                            <GlobalHeadManager />
+                            <Routes>
+                                <Route
+                                    path="/*"
+                                    element={<GuestRoutes initialData={initialData} />}
+                                />
+                                <Route path="/admin/*" element={<AuthRoutes />} />
+                            </Routes>
+                        </ToastProvider>
+                    </PrimeReactProvider>
+                </AuthProvider>
+            </ThemeProvider>
         </QueryClientProvider>
     );
 };

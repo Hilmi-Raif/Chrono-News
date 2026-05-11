@@ -47,8 +47,8 @@ const TopPost: FC<TopPostProps> = ({
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {topPost.map((post) => (
                     <div key={post.id} className="break-word">
-                        <div className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg flex flex-col h-full">
-                            <div className="relative w-full aspect-[16/9] bg-gray-200 rounded-t-lg overflow-hidden">
+                        <div className="shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg flex flex-col h-full bg-surface-0">
+                            <div className="relative w-full aspect-[16/9] bg-surface-200 rounded-t-lg overflow-hidden">
                                 <SafeImage
                                     src={
                                         post.thumbnail ? `${post.thumbnail}` : (thumbnail as string)
@@ -64,12 +64,12 @@ const TopPost: FC<TopPostProps> = ({
                             </div>
                             <div className="p-4 flex flex-col flex-grow">
                                 <h3
-                                    className="text-lg md:text-xl font-semibold w-fit cursor-pointer line-clamp-2 text-gray-700 mb-1"
+                                    className="text-lg md:text-xl font-semibold w-fit cursor-pointer line-clamp-2 text-text-color mb-1"
                                     onClick={() => handleNavigate(post)}
                                 >
                                     {post.title}
                                 </h3>
-                                <div className="flex items-center gap-2 text-sm text-gray-700 mb-2">
+                                <div className="flex items-center gap-2 text-sm text-text-color-secondary mb-2">
                                     <span
                                         className="font-medium cursor-pointer"
                                         onClick={() => {
@@ -82,10 +82,12 @@ const TopPost: FC<TopPostProps> = ({
                                     >
                                         {post.category?.name}
                                     </span>
-                                    <span className="text-gray-700">•</span>
-                                    <time className="text-gray-700">{post.createdAt}</time>
+                                    <span className="text-text-color-secondary">•</span>
+                                    <time className="text-text-color-secondary">
+                                        {post.createdAt}
+                                    </time>
                                 </div>
-                                <p className="text-sm md:text-base line-clamp-3 flex-grow text-gray-700">
+                                <p className="text-sm md:text-base line-clamp-3 flex-grow text-text-color">
                                     {post.summary}
                                 </p>
                             </div>

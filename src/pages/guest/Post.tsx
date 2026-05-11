@@ -16,12 +16,13 @@ import RegularPost from '../../components/post/RegularPost.tsx';
 import LoadingRetry from '../../components/ui/LoadingRetry.tsx';
 import EmptyData from '../../components/ui/EmptyData.tsx';
 import MiniEmptyData from '../../components/ui/MiniEmptyData.tsx';
-import { Paginator, PaginatorPageChangeEvent } from 'primereact/paginator';
+import { Paginator } from 'primereact/paginator';
 import { Dropdown } from 'primereact/dropdown';
 import { Skeleton } from 'primereact/skeleton';
 import SafeImage from '../../components/ui/SafeImage.tsx';
 import { InitialDataStructure } from '../../types/initialData.ts';
 import { FadeWrapper } from '../../components/ui/FadeWrapper.tsx';
+import ThemeToggle from '../../components/ui/ThemeToggle.tsx';
 
 interface PostProps {
     initialData?: InitialDataStructure;
@@ -133,11 +134,11 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
             return (
                 <div className="relative min-h-[80vh]">
                     {!loading && searchPosts && searchPosts.length > 0 && (
-                        <h3 className="text-[#4b5569] text-xl mb-3">Hasil Pencarian</h3>
+                        <h3 className="text-text-color-secondary text-xl mb-3">Hasil Pencarian</h3>
                     )}
                     {loading ? (
                         <FadeWrapper key="search-loading">
-                            <h3 className="text-[#4b5563] mb-4 text-xl">
+                            <h3 className="text-text-color-secondary mb-4 text-xl">
                                 <Skeleton width="10rem" />
                             </h3>
                             <RegularPost
@@ -186,7 +187,7 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
                         />
                     </FadeWrapper>
 
-                    <h3 className="text-[#4b5563] my-4 text-xl">
+                    <h3 className="text-text-color-secondary my-4 text-xl">
                         {loading ? <Skeleton width="10rem" /> : 'Berita Lainnya'}
                     </h3>
                     {loading ? (
@@ -236,7 +237,7 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
 
         return (
             <>
-                <h3 className="text-[#4b5563] mb-3 text-xl">
+                <h3 className="text-text-color-secondary mb-3 text-xl">
                     {loading ? <Skeleton width="10rem" /> : 'Berita Terkini'}
                 </h3>
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 items-stretch">
@@ -246,10 +247,6 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
                                 <HeadlinePost
                                     loading={true}
                                     headlinePost={null}
-                                    headlinePostPage={headlinePostPage}
-                                    handlePageChange={(page) => handlePageChange('headline', page)}
-                                    headlinePostPagination={headlinePostPagination}
-                                    headlineSize={sizes.headline}
                                     handleCategoryChange={handleCategoryChange}
                                 />
                             </FadeWrapper>
@@ -262,10 +259,6 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
                                 <HeadlinePost
                                     loading={false}
                                     headlinePost={headlinePost}
-                                    headlinePostPage={headlinePostPage}
-                                    handlePageChange={(page) => handlePageChange('headline', page)}
-                                    headlinePostPagination={headlinePostPagination}
-                                    headlineSize={sizes.headline}
                                     handleCategoryChange={handleCategoryChange}
                                 />
                             </FadeWrapper>
@@ -320,20 +313,21 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
                 ) : (
                     headlinePostPagination &&
                     (headlinePostPagination.totalItem || 0) > 0 && (
-                        <Paginator
-                            pageLinkSize={1}
-                            first={(headlinePostPage - 1) * sizes.headline}
-                            rows={sizes.headline}
-                            totalRecords={headlinePostPagination.totalItem || 0}
-                            onPageChange={(e) => handlePageChange('headline', e.page + 1)}
-                            template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
-                            className="mt-4 flex justify-center"
-                        />
+                        <div className="mt-4 flex justify-center">
+                            <Paginator
+                                first={(headlinePostPage - 1) * sizes.headline}
+                                rows={sizes.headline}
+                                totalRecords={headlinePostPagination.totalItem || 0}
+                                onPageChange={(e) => handlePageChange('headline', e.page + 1)}
+                                template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+                                className="w-fit"
+                            />
+                        </div>
                     )
                 )}
 
                 <div className="w-full flex md:items-center justify-between mt-4 md:flex-row flex-col text-start">
-                    <h3 className="text-[#4b5569] mb-2 md:mb-0 text-xl">
+                    <h3 className="text-text-color-secondary mb-2 md:mb-0 text-xl">
                         {loading ? <Skeleton width="10rem" /> : 'Berita Populer'}
                     </h3>
                     {loading ? (
@@ -392,13 +386,13 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
     };
 
     return (
-        <div className="min-h-screen bg-white">
+        <div className="guest-main-page min-h-screen bg-surface-ground text-text-color">
             <ScrollTop
-                className={`bg-[#f59e0b] color-[#465569] ${loading && 'hidden'} ${error && 'hidden'}`}
+                className={`guest-scrolltop bg-primary text-primary-text ${loading && 'hidden'} ${error && 'hidden'}`}
             />
 
-            <div className={`flex flex-col fixed top-0 w-full z-[2001]`}>
-                <nav className="flex justify-between items-center xl:flex-row flex-col bg-white w-full xl:fixed h-[56px]">
+            <div className={`flex flex-col fixed top-0 w-full z-[2001] bg-surface-0`}>
+                <nav className="flex justify-between items-center xl:flex-row flex-col bg-surface-0 w-full xl:fixed h-[56px]">
                     <div className="flex xl:block justify-between items-center w-full xl:w-fit mt-2 xl:mt-0">
                         <div className="flex items-center h-full ml-3">
                             <div className="relative xl:w-8 xl:h-8 w-11 h-11 shrink-0 rounded-md overflow-hidden">
@@ -409,11 +403,8 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
                                 />
                             </div>
 
-                            <h1
-                                style={{ color: 'var(--surface-600)' }}
-                                className="ml-1 text-[#475569] font-bold text-2xl xl:block hidden"
-                            >
-                                CHRONO<span style={{ color: 'var(--primary-500)' }}>NEWS</span>
+                            <h1 className="ml-1 text-text-color-secondary font-bold text-2xl xl:block hidden">
+                                CHRONO<span className="text-primary">NEWS</span>
                             </h1>
                         </div>
                         <div className="h-full flex items-center w-full justify-center xl:hidden pl-2 pr-3">
@@ -423,12 +414,16 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
                                     onChange={(e) => setSearchQuery(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                                     value={searchQuery || ''}
+                                    className="bg-surface-0 text-text-color border-surface-border"
                                 />
                                 <Button
                                     icon="pi pi-search"
                                     onClick={handleSearch}
                                     className="size-10"
                                 />
+                            </div>
+                            <div className="ml-2 flex items-center shrink-0">
+                                <ThemeToggle />
                             </div>
                         </div>
                     </div>
@@ -439,22 +434,26 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
                         ref={menuRef}
                         style={{ borderRadius: '5px', maxWidth: '162px' }}
                     />
-                    <div className="xl:flex hidden h-full w-fit items-center justify-center">
-                        <div className="p-inputgroup rounded-md mr-2 h-9 w-52">
+                    <div className="xl:flex hidden h-full w-fit items-center justify-center gap-2 pr-2">
+                        <div className="p-inputgroup rounded-md h-9 w-52">
                             <InputText
                                 placeholder="Cari Berita"
                                 onChange={(e) => setSearchQuery(e.target.value)}
                                 onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
                                 value={searchQuery || ''}
+                                className="bg-surface-0 text-text-color border-surface-border"
                             />
                             <Button icon="pi pi-search" className="size-9" onClick={handleSearch} />
+                        </div>
+                        <div>
+                            <ThemeToggle sizeClass="size-9" />
                         </div>
                     </div>
                 </nav>
 
                 <div
                     ref={tabMenuContainerRef}
-                    className="w-full overflow-x-auto hide-scrollbar bg-white"
+                    className="w-full overflow-x-auto hide-scrollbar bg-surface-0"
                 >
                     <TabMenu
                         model={isDesktop ? allDesktopCategories : allMobileCategories}
@@ -475,7 +474,7 @@ const Post: React.FC<PostProps> = ({ initialData }) => {
             {error && !isRetrying ? (
                 <LoadingRetry visibleConnectionError={true} onRetry={handleRetry} />
             ) : (
-                <div className="relative min-h-screen p-4 mx-auto max-w-6xl bg-white xl:pt-[4.6rem] pt-32 rounded-md">
+                <div className="guest-main-content relative min-h-screen p-4 mx-auto max-w-6xl bg-surface-ground xl:pt-[4.6rem] pt-32 rounded-md">
                     {renderContent()}
                 </div>
             )}

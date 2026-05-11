@@ -19,10 +19,10 @@ const RegularPostSkeleton: React.FC<RegularPostSkeletonProps> = ({
                 {skeletonItems.map((_, index) => (
                     <div
                         key={index}
-                        className={`flex ${fillHeight ? 'h-[150px] sm:h-[160px]' : 'mb-3'} break-all justify-between ${fillHeight ? '' : compact ? 'h-32' : 'h-40'} shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg overflow-hidden`}
+                        className={`flex ${fillHeight ? 'min-h-40 lg:h-[150px] xl:h-[160px]' : 'mb-3'} break-all justify-between ${fillHeight ? '' : compact ? 'min-h-40 lg:min-h-32' : 'h-40'} shadow-[0_1px_6px_rgba(0,0,0,0.1)] rounded-lg overflow-hidden bg-surface-0`}
                     >
                         <div
-                            className={`relative flex-shrink-0 ${compact ? 'w-32 xs:w-40 md:w-44 lg:w-40 xl:w-44' : 'w-48 sm:w-56 md:w-64 lg:w-72'} h-full`}
+                            className={`relative flex-shrink-0 ${compact ? 'w-44 xs:w-56 md:w-64 lg:w-40 xl:w-44' : 'w-48 sm:w-56 md:w-64 lg:w-72'} h-full`}
                         >
                             <Skeleton width="100%" height="100%" className="!rounded-none" />
                         </div>

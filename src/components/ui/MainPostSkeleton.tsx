@@ -31,7 +31,7 @@ const MainPostSkeleton: React.FC = () => {
 
             <div
                 className="w-full my-4 opacity-30"
-                style={{ borderTop: '1px solid #8496af' }}
+                style={{ borderTop: '1px solid var(--surface-border)' }}
             ></div>
 
             <div>
@@ -45,7 +45,7 @@ const MainPostSkeleton: React.FC = () => {
 
             <div
                 className="w-full my-4 opacity-30"
-                style={{ borderTop: '1px solid #8496af' }}
+                style={{ borderTop: '1px solid var(--surface-border)' }}
             ></div>
 
             <DisqusSkeleton />

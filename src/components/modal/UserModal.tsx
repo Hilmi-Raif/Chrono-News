@@ -143,7 +143,7 @@ const UserModal = <T extends ProfileFormData | UserManagementFormData>({
         >
             <form onSubmit={handleSubmit} className="w-full">
                 <div className="flex flex-col p-4 gap-4">
-                    <div className="relative size-[14rem] mx-auto flex justify-center items-center overflow-hidden rounded-full border border-[#d1d5db] bg-slate-100">
+                    <div className="modal-media-skeleton relative size-[14rem] mx-auto flex justify-center items-center overflow-hidden rounded-full border border-surface-border bg-surface-100">
                         {showProfilePictureSkeleton && (
                             <Skeleton
                                 shape="circle"
@@ -167,11 +167,11 @@ const UserModal = <T extends ProfileFormData | UserManagementFormData>({
                         )}
 
                         {showProfilePictureError && (
-                            <div className="absolute inset-0 flex items-center justify-center bg-slate-100 text-slate-400">
-                                <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-full border border-slate-300 bg-slate-50">
+                            <div className="absolute inset-0 flex items-center justify-center bg-surface-100 text-text-secondary">
+                                <span className="relative inline-flex h-14 w-14 items-center justify-center rounded-full border border-surface-border bg-surface-0">
                                     <i className="pi pi-image text-3xl" aria-hidden="true"></i>
                                     <span
-                                        className="absolute h-[2px] w-12 rotate-45 rounded-full bg-slate-400"
+                                        className="absolute h-[2px] w-12 rotate-45 rounded-full bg-text-secondary"
                                         aria-hidden="true"
                                     ></span>
                                     <span className="sr-only">Gambar gagal dimuat</span>

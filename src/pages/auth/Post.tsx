@@ -68,7 +68,7 @@ const Post = () => {
     );
 
     return (
-        <div className="m-4 min-h-full max-h-fit bg-white rounded-xl shadow-md p-4 flex flex-col">
+        <div className="m-4 min-h-full max-h-fit bg-surface-0 rounded-xl shadow-md p-4 flex flex-col">
             <div
                 className={`${visibleConnectionError || visibleLoadingConnection ? 'hidden' : 'block'}`}
             >

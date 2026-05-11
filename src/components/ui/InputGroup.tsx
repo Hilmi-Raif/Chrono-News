@@ -27,7 +27,7 @@ const InputGroup = <T extends string | number | readonly string[] | undefined>({
         <>
             <label
                 htmlFor={label.replace(/\s+/g, '').toLowerCase()}
-                className={`block mb-1 font-medium  ${error ? 'p-error' : 'text-[#48525f]'}`}
+                className={`block mb-1 font-medium  ${error ? 'p-error' : 'text-text-color-secondary'}`}
             >
                 {label}
             </label>
@@ -71,7 +71,7 @@ const InputGroup = <T extends string | number | readonly string[] | undefined>({
                 />
             )}
             {error && <small className="p-error">{error}</small>}
-            {!error && tip != '' && <small className="text-gray-500">{tip}</small>}
+            {!error && tip != '' && <small className="text-text-color-secondary">{tip}</small>}
         </>
     );
 };

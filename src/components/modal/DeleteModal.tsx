@@ -36,7 +36,7 @@ const DeleteModal = ({
                 {submitLoading ? (
                     <i
                         className="pi pi-spin pi-spinner text-[24px] w-[51px]"
-                        style={{ color: '#475569' }}
+                        style={{ color: 'var(--text-color-secondary)' }}
                     ></i>
                 ) : (
                     'Delete'

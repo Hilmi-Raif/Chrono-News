@@ -19,7 +19,10 @@ const SubmitButton: React.FC<SubmitButtonProps> = ({
             disabled={loading || (captchaMode && tokenCaptcha == '')}
         >
             {loading ? (
-                <i className="pi pi-spin pi-spinner text-[24px]" style={{ color: '#475569' }}></i>
+                <i
+                    className="pi pi-spin pi-spinner text-[24px]"
+                    style={{ color: 'var(--text-color-secondary)' }}
+                ></i>
             ) : (
                 'Submit'
             )}

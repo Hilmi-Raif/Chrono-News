@@ -16,6 +16,7 @@ import { useToast } from '../../hooks/useToast';
 import { useAuth } from '../../hooks/useAuth';
 import { useLocation } from 'react-router-dom';
 import { useProfile } from '../../hooks/useProfile';
+import ThemeToggle from '../ui/ThemeToggle.tsx';
 
 interface SidebarResponsiveProps {
     children: ReactNode;
@@ -75,8 +76,8 @@ const SidebarResponsive = ({ children }: SidebarResponsiveProps) => {
     return (
         <div className="flex h-screen w-full">
             <Sidebar
-                className="md:w-1/4 md:block text-white border-r-white"
-                backgroundColor={`#475569`}
+                className="admin-sidebar md:w-1/4 md:block text-white border-r-white"
+                backgroundColor={`var(--admin-sidebar-bg)`}
                 breakPoint={'md'}
                 toggled={toggled}
                 onBackdropClick={handleSidebarToggle}
@@ -101,7 +102,7 @@ const SidebarResponsive = ({ children }: SidebarResponsiveProps) => {
                             />
                             <h1
                                 className={`mt-2 mb-4 font-extrabold text-xl ${collapsed ? 'hidden' : 'block'}`}
-                                style={{ color: 'var(--surface-0)' }}
+                                style={{ color: '#ffffff' }}
                             >
                                 CHRONO
                                 <span style={{ color: 'var(--primary-500)' }}>NEWS</span>
@@ -143,7 +144,7 @@ const SidebarResponsive = ({ children }: SidebarResponsiveProps) => {
             </Sidebar>
 
             <nav className="flex flex-col w-full overflow-hidden">
-                <div className="flex items-center px-4 w-full z-40 shadow-md bg-white text-black">
+                <div className="flex items-center px-4 w-full z-40 shadow-md bg-surface-0 text-text-color">
                     <div className="flex py-[17px] w-full items-center gap-4 justify-between">
                         <div className={`flex items-center`}>
                             <Button
@@ -166,19 +167,22 @@ const SidebarResponsive = ({ children }: SidebarResponsiveProps) => {
                                 className={`size-8 flex md:hidden`}
                                 icon={<i className={`pi pi-arrow-right text-md`} />}
                             />
-                            <p className={`ml-4 text-xl text-[#4b5563] md:hidden block`}>
+                            <p className={`ml-4 text-xl text-text-color-secondary md:hidden block`}>
                                 {lastPath}
                             </p>
                         </div>
 
-                        <Button
-                            severity="secondary"
-                            onClick={toggleMenuVisibility}
-                            text
-                            rounded
-                            className={`size-8`}
-                            icon={<i className={`pi pi-bars text-xl`} />}
-                        />
+                        <div className="flex items-center gap-2">
+                            <ThemeToggle className="admin-theme-toggle" sizeClass="size-8" />
+                            <Button
+                                severity="secondary"
+                                onClick={toggleMenuVisibility}
+                                text
+                                rounded
+                                className={`size-8`}
+                                icon={<i className={`pi pi-bars text-xl`} />}
+                            />
+                        </div>
                         <div ref={menuContainerRef} className={`absolute top-0 right-0`}>
                             <PrimeMenu
                                 key={key}
@@ -215,10 +219,10 @@ const SidebarResponsive = ({ children }: SidebarResponsiveProps) => {
                 </div>
                 <div
                     ref={scrollRef}
-                    className="flex-grow bg-[#f2f2f2] overflow-y-auto w-full overflow-x-hidden "
+                    className="flex-grow bg-surface-ground overflow-y-auto w-full overflow-x-hidden "
                 >
                     {children}
-                    <footer className=" border-t-[1px] flex flex-col gap-4 bg-white border-[#aeb0b5] py-2 md:pr-2 md:text-end text-sm pr-0 text-center">
+                    <footer className=" border-t-[1px] flex flex-col gap-4 bg-surface-0 border-surface-border py-2 md:pr-2 md:text-end text-sm pr-0 text-center">
                         <h1 className="font-normal text-xs">
                             &copy; {new Date().getFullYear()} ChronoNews. All rights reserved.
                         </h1>
