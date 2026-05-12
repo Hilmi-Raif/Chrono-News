@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { Theme, ThemeContext } from './themeContext.ts';
 
 const getClientTheme = (): Theme => {
+    if (typeof window === 'undefined') return 'light';
+
     const savedTheme = localStorage.getItem('theme');
     if (savedTheme === 'light' || savedTheme === 'dark') {
         return savedTheme;
@@ -12,11 +14,7 @@ const getClientTheme = (): Theme => {
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const [themeReady, setThemeReady] = useState(false);
-    const [theme, setTheme] = useState<Theme>('light');
-
-    useEffect(() => {
-        setTheme(getClientTheme());
-    }, []);
+    const [theme, setTheme] = useState<Theme>(getClientTheme);
 
     useEffect(() => {
         setThemeReady(false);
@@ -29,45 +27,53 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         }
         localStorage.setItem('theme', theme);
 
-        let themeLink = document.getElementById('theme-link') as HTMLLinkElement | null;
-        if (!themeLink) {
-            themeLink = document.createElement('link');
-            themeLink.id = 'theme-link';
-            themeLink.rel = 'stylesheet';
-            document.head.appendChild(themeLink);
-        }
-
         const nextHref =
             theme === 'dark'
                 ? 'https://unpkg.com/primereact/resources/themes/lara-dark-amber/theme.css'
                 : 'https://unpkg.com/primereact/resources/themes/lara-light-amber/theme.css';
 
-        let fallbackTimeout: number | undefined;
+        const oldThemeLink = document.getElementById('theme-link') as HTMLLinkElement | null;
+
+        if (!oldThemeLink) {
+            const newLink = document.createElement('link');
+            newLink.id = 'theme-link';
+            newLink.rel = 'stylesheet';
+            newLink.href = nextHref;
+            document.head.appendChild(newLink);
+            setThemeReady(true);
+            return;
+        }
+
+        if (oldThemeLink.href === nextHref) {
+            setThemeReady(true);
+            return;
+        }
+
+        const newLink = document.createElement('link');
+        newLink.id = 'theme-link-clone';
+        newLink.rel = 'stylesheet';
+        newLink.href = nextHref;
 
         const markReady = () => {
-            if (fallbackTimeout) {
-                clearTimeout(fallbackTimeout);
+            clearTimeout(fallbackTimeout);
+            newLink.id = 'theme-link';
+            if (oldThemeLink && oldThemeLink.parentNode) {
+                oldThemeLink.parentNode.removeChild(oldThemeLink);
             }
             setThemeReady(true);
         };
 
-        themeLink.onload = markReady;
-        themeLink.onerror = markReady;
+        newLink.onload = markReady;
+        newLink.onerror = markReady;
 
-        if (themeLink.href !== nextHref) {
-            themeLink.href = nextHref;
-        } else if (themeLink.sheet) {
-            markReady();
-        } else {
-            fallbackTimeout = window.setTimeout(markReady, 300);
-        }
+        oldThemeLink.parentNode?.insertBefore(newLink, oldThemeLink.nextSibling);
+
+        const fallbackTimeout = window.setTimeout(markReady, 1000);
 
         return () => {
-            themeLink.onload = null;
-            themeLink.onerror = null;
-            if (fallbackTimeout) {
-                clearTimeout(fallbackTimeout);
-            }
+            newLink.onload = null;
+            newLink.onerror = null;
+            clearTimeout(fallbackTimeout);
         };
     }, [theme]);
 

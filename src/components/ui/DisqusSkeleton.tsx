@@ -19,7 +19,7 @@ const DisqusSkeleton: React.FC<DisqusSkeletonProps> = () => {
                 <div className="hidden md:flex justify-center gap-[45px] flex-nowrap mx-auto">
                     {[...Array(6)].map((_, i) => (
                         <div key={i} className="flex flex-col items-center gap-[6px]">
-                            <Skeleton shape="circle" size="48px" />
+                            <Skeleton shape="circle" size="48px" className="!rounded-full" />
                             <Skeleton width="55px" height="12px" />
                         </div>
                     ))}
@@ -29,7 +29,7 @@ const DisqusSkeleton: React.FC<DisqusSkeletonProps> = () => {
                     <div className="flex justify-center gap-[40px]">
                         {[...Array(3)].map((_, i) => (
                             <div key={i} className="flex flex-col items-center gap-[4px]">
-                                <Skeleton shape="circle" size="44px" />
+                                <Skeleton shape="circle" size="44px" className="!rounded-full" />
                                 <Skeleton width="50px" height="10px" />
                             </div>
                         ))}
@@ -37,7 +37,7 @@ const DisqusSkeleton: React.FC<DisqusSkeletonProps> = () => {
                     <div className="flex justify-center gap-[40px]">
                         {[...Array(3)].map((_, i) => (
                             <div key={i} className="flex flex-col items-center gap-[4px]">
-                                <Skeleton shape="circle" size="44px" />
+                                <Skeleton shape="circle" size="44px" className="!rounded-full" />
                                 <Skeleton width="50px" height="10px" />
                             </div>
                         ))}
@@ -55,7 +55,7 @@ const DisqusSkeleton: React.FC<DisqusSkeletonProps> = () => {
                     <Skeleton
                         shape="circle"
                         size="24px"
-                        className="!w-[22px] !h-[22px] md:!w-[24px] md:!h-[24px]"
+                        className="!w-[22px] !h-[22px] md:!w-[24px] md:!h-[24px] !rounded-full"
                     />
                     <Skeleton
                         width="70px"
@@ -68,7 +68,7 @@ const DisqusSkeleton: React.FC<DisqusSkeletonProps> = () => {
             <div className="py-5 md:p-4 border-b border-surface-border">
                 <div className="flex gap-3 mb-4">
                     <div className="hidden md:block shrink-0">
-                        <Skeleton shape="circle" size="48px" />
+                        <Skeleton shape="circle" size="48px" className="!rounded-full" />
                     </div>
                     <div className="flex-1">
                         <Skeleton height="80px" className="hidden md:block !rounded-lg" />
@@ -85,7 +85,7 @@ const DisqusSkeleton: React.FC<DisqusSkeletonProps> = () => {
                                     key={i}
                                     shape="circle"
                                     size="42px"
-                                    className="!w-[40px] !h-[40px] md:!w-[42px] md:!h-[42px]"
+                                    className="!w-[40px] !h-[40px] md:!w-[42px] md:!h-[42px] !rounded-full"
                                 />
                             ))}
                         </div>
@@ -98,7 +98,7 @@ const DisqusSkeleton: React.FC<DisqusSkeletonProps> = () => {
                                 height="12px"
                                 className="!w-[180px] md:!w-[160px]"
                             />
-                            <Skeleton shape="circle" size="16px" />
+                            <Skeleton shape="circle" size="16px" className="!rounded-full" />
                         </div>
                         <Skeleton width="100%" height="42px" className="!rounded" />
                     </div>
@@ -107,7 +107,7 @@ const DisqusSkeleton: React.FC<DisqusSkeletonProps> = () => {
 
             <div className="py-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 md:gap-0 border-b border-surface-border">
                 <div className="w-full md:w-auto flex gap-4 items-center">
-                    <Skeleton shape="circle" size="20px" />
+                    <Skeleton shape="circle" size="20px" className="!rounded-full" />
                     <div className="w-[1px] h-[14px] bg-surface-border hidden md:block"></div>
                     <Skeleton width="60px" height="16px" />
                 </div>

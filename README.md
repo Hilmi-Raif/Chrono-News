@@ -1,17 +1,17 @@
-# ChronoNews
+# Chrono-News
 
 <p align="center">
 <img src="https://github.com/user-attachments/assets/c7b12e41-e63d-49d7-b783-55f27d7388fb" alt="chrononews">
 </p>
 
-ChronoNews is a modern news platform with a Hybrid SPA & SSR architecture, delivering both top-tier performance and a seamless user experience. This platform allows users to create image-supported news content, powered by the [ChronoNewsAPI](https://github.com/ScrKiddie/ChronoNewsAPI) backend.
+Chrono-News is a modern news platform with a Hybrid SPA & SSR architecture, delivering both top-tier performance and a seamless user experience. This platform allows users to create image-supported news content, powered by the [Chrono-News-API](https://github.com/Hilmi-Raif/Chrono-News-API) backend.
 
 ## Key Features
 
 - **Hybrid Rendering**: Public article pages are server-rendered for fast initial loads and SEO. Upon loading, React hydrates the page to enable interactivity, transitioning the experience into a Single Page Application (SPA).
 - **Image-Enhanced Post Creation**: Users can create and manage news articles with images.
 - **Minimalist & Responsive Design**: Clean and simple design ensures a comfortable user experience across devices.
-- **Integrated Backend**: Connected to [ChronoNewsAPI](https://github.com/ScrKiddie/ChronoNewsAPI) for dynamic news management.
+- **Integrated Backend**: Connected to [Chrono-News-API](https://github.com/Hilmi-Raif/Chrono-News-API) for dynamic news management.
 
 ## Technologies
 
@@ -22,30 +22,30 @@ ChronoNews is a modern news platform with a Hybrid SPA & SSR architecture, deliv
 
 ## Environment Variables
 
-| **Key**                           | **Type** | **Description**                                                                         | **Example**                 |
-| --------------------------------- | -------- | --------------------------------------------------------------------------------------- | --------------------------- |
-| **NODE_ENV**                      | `string` | Defines the application environment (`development` or `production`).                    | `production`                |
-| **PORT**                          | `number` | The port on which the server will run.                                                  | `5137`                      |
-| **VITE_GOOGLE_VERIFICATION_CODE** | `string` | Code from Google Search Console for domain ownership verification.                      | `Llyo9DGOTzQ5OxYtMCFkIH3_u` |
-| **VITE_BASE_URL**                 | `string` | The public URL of the frontend (Required for SEO, Canonical links, and OG tags).        | `https://yourdomain.com`    |
-| **VITE_TURNSTILE_SITE_KEY**       | `string` | Turnstile (reCAPTCHA) site key                                                          | `0x4AAABABA_vmrAXsPDzuG1l`  |
-| **VITE_CHRONONEWSAPI_URI**        | `string` | URL of the backend API from [ChronoNewsAPI](https://github.com/ScrKiddie/ChronoNewsAPI) | `http://localhost:6969`     |
-| **VITE_DISQUS_SHORTNAME**         | `string` | Disqus shortname for your site                                                          | `your-shortname`            |
+| **Key**                           | **Type** | **Description**                                                                              | **Example**                 |
+| --------------------------------- | -------- | -------------------------------------------------------------------------------------------- | --------------------------- |
+| **NODE_ENV**                      | `string` | Defines the application environment (`development` or `production`).                         | `production`                |
+| **PORT**                          | `number` | The port on which the server will run.                                                       | `5137`                      |
+| **VITE_GOOGLE_VERIFICATION_CODE** | `string` | Code from Google Search Console for domain ownership verification.                           | `Llyo9DGOTzQ5OxYtMCFkIH3_u` |
+| **VITE_BASE_URL**                 | `string` | The public URL of the frontend (Required for SEO, Canonical links, and OG tags).             | `https://yourdomain.com`    |
+| **VITE_TURNSTILE_SITE_KEY**       | `string` | Turnstile (reCAPTCHA) site key                                                               | `0x4AAABABA_vmrAXsPDzuG1l`  |
+| **VITE_CHRONONEWSAPI_URI**        | `string` | URL of the backend API from [Chrono-News-API](https://github.com/Hilmi-Raif/Chrono-News-API) | `http://localhost:6969`     |
+| **VITE_DISQUS_SHORTNAME**         | `string` | Disqus shortname for your site                                                               | `your-shortname`            |
 
 ## Setup & Run
 
 ### Prerequisites
 
 - Node.js (v18 or higher recommended)
-- A running instance of the [ChronoNewsAPI](https://github.com/ScrKiddie/ChronoNewsAPI)
+- A running instance of the [Chrono-News-API](https://github.com/Hilmi-Raif/Chrono-News-API)
 
 ### Installation
 
 1.  **Clone the repository**
 
     ```bash
-    git clone https://github.com/scrkiddie/chrononews.git
-    cd chrononews
+    git clone https://github.com/Hilmi-Raif/Chrono-News.git
+    cd Chrono-News
     ```
 
 2.  **Install dependencies**

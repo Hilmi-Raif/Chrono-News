@@ -1,4 +1,3 @@
-import 'primereact/resources/themes/lara-light-amber/theme.css';
 import 'primeicons/primeicons.css';
 import { AuthProvider } from './context/AuthProvider.tsx';
 import { ThemeProvider } from './context/ThemeProvider.tsx';

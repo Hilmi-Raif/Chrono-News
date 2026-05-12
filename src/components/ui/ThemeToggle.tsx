@@ -8,18 +8,18 @@ interface ThemeToggleProps {
 }
 
 const ThemeToggle: React.FC<ThemeToggleProps> = ({ className = '', sizeClass = 'w-10 h-10' }) => {
-    const { theme, toggleTheme } = useTheme();
-    const icon = theme === 'dark' ? 'pi-star' : 'pi-sun';
+    const { toggleTheme } = useTheme();
 
     return (
         <Button
-            key={theme}
             type="button"
-            icon={`pi ${icon}`}
-            className={`theme-toggle-button ${sizeClass} ${className}`}
+            className={`theme-toggle-button p-button-icon-only ${sizeClass} ${className}`}
             onClick={toggleTheme}
             aria-label="Toggle Dark Mode"
-        />
+        >
+            <i className="p-button-icon p-c pi pi-sun theme-icon-light"></i>
+            <i className="p-button-icon p-c pi pi-moon theme-icon-dark"></i>
+        </Button>
     );
 };
 

@@ -844,6 +844,14 @@ html.dark .guest-footer {
     color: inherit !important;
 }
 
+html.dark .theme-icon-light {
+    display: none !important;
+}
+
+html:not(.dark) .theme-icon-dark {
+    display: none !important;
+}
+
 .admin-theme-toggle.theme-toggle-button.p-button {
     border-radius: 9999px !important;
     background-color: transparent !important;

@@ -4,15 +4,26 @@
         <meta charset="UTF-8" />
         <script>
             try {
+                var initialTheme = 'light';
                 if (
                     localStorage.theme === 'dark' ||
                     (!('theme' in localStorage) &&
                         window.matchMedia('(prefers-color-scheme: dark)').matches)
                 ) {
+                    initialTheme = 'dark';
                     document.documentElement.classList.add('dark');
                 } else {
                     document.documentElement.classList.remove('dark');
                 }
+
+                var themeLink = document.createElement('link');
+                themeLink.id = 'theme-link';
+                themeLink.rel = 'stylesheet';
+                themeLink.href =
+                    initialTheme === 'dark'
+                        ? 'https://unpkg.com/primereact/resources/themes/lara-dark-amber/theme.css'
+                        : 'https://unpkg.com/primereact/resources/themes/lara-light-amber/theme.css';
+                document.head.appendChild(themeLink);
             } catch (_) {}
         </script>
         <link rel="icon" type="image/svg+xml" href="/chrononews.svg" />
