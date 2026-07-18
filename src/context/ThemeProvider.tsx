@@ -29,8 +29,8 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
         const nextHref =
             theme === 'dark'
-                ? 'https://unpkg.com/primereact/resources/themes/lara-dark-amber/theme.css'
-                : 'https://unpkg.com/primereact/resources/themes/lara-light-amber/theme.css';
+                ? '/themes/lara-dark-amber/theme.css'
+                : '/themes/lara-light-amber/theme.css';
 
         const oldThemeLink = document.getElementById('theme-link') as HTMLLinkElement | null;
 
@@ -44,7 +44,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             return;
         }
 
-        if (oldThemeLink.href === nextHref) {
+        if (oldThemeLink.getAttribute('href') === nextHref) {
             setThemeReady(true);
             return;
         }
